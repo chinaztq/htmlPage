@@ -1,0 +1,825 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LinkMeta | Expand Globally with AI</title>
+  <style>
+    :root {
+      --coral: #FF6B4A;
+      --gold: #FFB347;
+      --emerald: #10B981;
+      --warm-white: #FFFBF7;
+      --soft-coral: #FFF5F2;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --purple-1: #2a1b5c;
+      --purple-2: #4a2d8f;
+      --card-border: rgba(17, 24, 39, 0.08);
+      --shadow: 0 14px 35px rgba(17, 24, 39, 0.08);
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --max-w: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "Inter", system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--warm-white);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: min(var(--max-w), calc(100% - 2.5rem));
+      margin: 0 auto;
+    }
+
+    section { padding: 5.5rem 0; }
+
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: clamp(2rem, 5vw, 4.2rem); line-height: 1.05; letter-spacing: -0.02em; }
+    h2 { font-size: clamp(1.6rem, 3vw, 2.6rem); line-height: 1.15; letter-spacing: -0.01em; }
+    h3 { font-size: clamp(1.05rem, 2.2vw, 1.35rem); }
+    p  { color: var(--muted); font-size: clamp(0.98rem, 1.3vw, 1.06rem); }
+
+    .section-head {
+      text-align: center;
+      max-width: 740px;
+      margin: 0 auto 2.3rem auto;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      border: none;
+      border-radius: 999px;
+      padding: .82rem 1.25rem;
+      min-height: 48px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform .25s ease, box-shadow .25s ease, opacity .25s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(120deg, var(--coral), var(--gold));
+      box-shadow: 0 10px 24px rgba(255, 107, 74, 0.28);
+    }
+    .btn-secondary {
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--card-border);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: .36rem .75rem;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      color: #92400e;
+      background: #fff4d9;
+      border: 1px solid rgba(146, 64, 14, 0.14);
+    }
+
+    .announcement {
+      background: linear-gradient(90deg, var(--coral), #ff805d 48%, var(--gold));
+      color: #fff;
+      padding: .72rem 0;
+      text-align: center;
+      font-weight: 700;
+      font-size: .92rem;
+      letter-spacing: .01em;
+    }
+
+    .hero {
+      background: var(--warm-white);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+    .gradient-text {
+      background: linear-gradient(90deg, var(--coral), var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero-copy p {
+      margin-top: 1rem;
+      max-width: 560px;
+    }
+    .hero-actions {
+      margin-top: 1.35rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+    }
+    .floating {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(2px);
+      opacity: .45;
+      animation: floatY 6.4s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .f1 {
+      width: 170px; height: 170px;
+      background: radial-gradient(circle at 30% 30%, #ffd0c5, #ff8f74);
+      top: 8%; left: -45px;
+    }
+    .f2 {
+      width: 130px; height: 130px;
+      background: radial-gradient(circle at 40% 35%, #ffe0a8, #ffb347);
+      right: 3%; top: 16%;
+      animation-delay: .8s;
+    }
+    .f3 {
+      width: 145px; height: 145px;
+      background: radial-gradient(circle at 30% 30%, #bcf8df, #52d8aa);
+      bottom: 2%; right: 22%;
+      animation-delay: 1.4s;
+    }
+
+    .placeholder {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255,255,255,.2);
+      box-shadow: var(--shadow);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: .02em;
+      padding: 1rem;
+      position: relative;
+      overflow: hidden;
+      min-height: 180px;
+      isolation: isolate;
+    }
+    .placeholder::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, transparent 20%, rgba(255,255,255,.26) 35%, transparent 60%);
+      transform: translateX(-120%);
+      animation: shimmer 4s linear infinite;
+      z-index: 0;
+    }
+    .placeholder > span { position: relative; z-index: 1; }
+
+    .dashboard-ph {
+      height: 380px;
+      background: linear-gradient(135deg, #ff9c82 0%, #ffb347 40%, #3ccfa2 100%);
+    }
+
+    .video-wrap {
+      background: linear-gradient(160deg, #fffaf4 0%, #fff5f2 58%, #fff0eb 100%);
+    }
+    .video-box {
+      margin: 0 auto;
+      width: min(100%, 960px);
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--card-border);
+      background: linear-gradient(120deg, #ffd7cd 0%, #ffbfae 40%, #ffc980 100%);
+      position: relative;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .video-label {
+      position: absolute;
+      left: 1rem;
+      bottom: 1rem;
+      background: rgba(255, 255, 255, 0.88);
+      padding: .4rem .7rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: .88rem;
+      color: #7f1d1d;
+    }
+    .play-btn {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 98px;
+      height: 98px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at 35% 30%, #fff, #ffe7e0);
+      box-shadow: 0 12px 26px rgba(17, 24, 39, 0.2);
+      animation: pulse 2s ease-out infinite;
+    }
+    .play-btn::before {
+      content: "";
+      display: block;
+      width: 0;
+      height: 0;
+      border-left: 22px solid var(--coral);
+      border-top: 14px solid transparent;
+      border-bottom: 14px solid transparent;
+      margin-left: 6px;
+    }
+    .video-caption {
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: 700;
+      color: #9a3412;
+    }
+
+    .pain {
+      background: var(--soft-coral);
+    }
+    .cards-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 1.15rem;
+      box-shadow: 0 8px 24px rgba(17, 24, 39, 0.04);
+    }
+
+    .platform-card {
+      background: #fff;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.2rem;
+      box-shadow: var(--shadow);
+    }
+    .product-ph {
+      height: 360px;
+      background: linear-gradient(135deg, #ffd2c7 0%, #ffc37f 45%, #7de6c4 100%);
+    }
+
+    .features {
+      background: var(--soft-coral);
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .copilot {
+      background: linear-gradient(140deg, var(--purple-1), var(--purple-2) 60%, #7d47bd);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .copilot .section-head p { color: #d6cff8; }
+    .chat-shell {
+      margin: 0 auto;
+      width: min(100%, 860px);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(6px);
+      overflow: hidden;
+    }
+    .chat-messages {
+      min-height: 250px;
+      max-height: 380px;
+      overflow: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+    }
+    .bubble {
+      max-width: 80%;
+      padding: .66rem .84rem;
+      border-radius: 14px;
+      font-size: .95rem;
+      line-height: 1.35;
+    }
+    .bot {
+      align-self: flex-start;
+      background: rgba(255,255,255,.18);
+      color: #f6f3ff;
+    }
+    .user {
+      align-self: flex-end;
+      background: linear-gradient(120deg, var(--coral), var(--gold));
+      color: #fff;
+      font-weight: 600;
+    }
+    .chat-input-wrap {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: .6rem;
+      padding: .9rem;
+      border-top: 1px solid rgba(255,255,255,.16);
+    }
+    .chat-input {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.09);
+      color: #fff;
+      padding: .7rem .8rem;
+      min-height: 46px;
+    }
+    .chat-input::placeholder { color: #ddd6fe; }
+
+    .stats {
+      background: linear-gradient(120deg, #10b981, #0ea56f 45%, #0f9c6a);
+      color: #fff;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      text-align: center;
+    }
+    .stat {
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: var(--radius-md);
+      padding: 1rem .8rem;
+    }
+    .stat-num {
+      font-size: clamp(1.6rem, 4vw, 2.7rem);
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: .4rem;
+    }
+    .stat p { color: #e8fff5; }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .price-card {
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      background: #fff;
+      padding: 1.2rem;
+      display: grid;
+      gap: .8rem;
+      box-shadow: 0 8px 24px rgba(17, 24, 39, 0.04);
+    }
+    .price-card.featured {
+      border: 1.8px solid var(--coral);
+      transform: translateY(-3px);
+      box-shadow: 0 14px 36px rgba(255, 107, 74, 0.16);
+    }
+    .price {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .price small {
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .features-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: .45rem;
+    }
+    .features-list li::before {
+      content: "â";
+      color: var(--emerald);
+      margin-right: .5rem;
+      font-weight: 800;
+    }
+
+    .cta-footer {
+      background: linear-gradient(120deg, var(--coral), #ff7d58 40%, var(--gold));
+      color: #fff;
+      padding-top: 4.4rem;
+      padding-bottom: 2rem;
+    }
+    .cta-card {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: var(--radius-lg);
+      padding: 1.3rem;
+      text-align: center;
+      backdrop-filter: blur(2px);
+    }
+    .cta-card p { color: #fff7ed; margin-top: .6rem; }
+    .footer {
+      margin-top: 2rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid rgba(255,255,255,.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .8rem;
+      font-size: .92rem;
+      color: #fffaf0;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes shimmer {
+      100% { transform: translateX(120%); }
+    }
+    @keyframes floatY {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-18px); }
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(255, 107, 74, .45), 0 12px 26px rgba(17, 24, 39, .2); }
+      70%  { box-shadow: 0 0 0 26px rgba(255, 107, 74, 0), 0 12px 26px rgba(17, 24, 39, .2); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 107, 74, 0), 0 12px 26px rgba(17, 24, 39, .2); }
+    }
+
+    /* Tablet */
+    @media (max-width: 1024px) {
+      section { padding: 4.6rem 0; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .cards-3 { grid-template-columns: repeat(2, 1fr); }
+      .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .dashboard-ph, .product-ph { height: 320px; }
+    }
+
+    /* Mobile */
+    @media (max-width: 700px) {
+      .container { width: min(var(--max-w), calc(100% - 1.25rem)); }
+      section { padding: 3.8rem 0; }
+      .cards-3,
+      .features-grid,
+      .pricing-grid,
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-actions .btn { width: 100%; }
+      .dashboard-ph, .product-ph { height: 240px; }
+      .play-btn { width: 82px; height: 82px; }
+      .announcement { font-size: .83rem; padding: .6rem .5rem; }
+      .chat-input-wrap { grid-template-columns: 1fr; }
+      .chat-input-wrap .btn { width: 100%; }
+      p { font-size: .95rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- 1) ANNOUNCEMENT BAR -->
+  <div class="announcement">
+    ð New: LinkMeta AI Copilot now supports instant market-ready localization in 100+ regions.
+  </div>
+
+  <!-- 2) HERO SECTION -->
+  <section class="hero">
+    <span class="floating f1"></span>
+    <span class="floating f2"></span>
+    <span class="floating f3"></span>
+    <div class="container hero-grid">
+      <div class="hero-copy reveal">
+        <span class="pill">LinkMeta</span>
+        <h1 style="margin-top:.9rem;">
+          <span class="gradient-text">Expand Globally with AI</span>
+        </h1>
+        <p>
+          Build, localize, and scale your cross-border commerce from one intelligent platform.
+          Launch faster, reduce operational friction, and grow revenue in every market.
+        </p>
+        <div class="hero-actions">
+          <a href="#" class="btn btn-primary">Start Free Trial</a>
+          <a href="#" class="btn btn-secondary">Book a Demo</a>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <!-- IMAGE PLACEHOLDER: Hero dashboard screenshot (admin analytics + storefront controls)
+             Suggested sources: unsplash.com (search: "analytics dashboard", "ecommerce dashboard"),
+             undraw.co (search: "dashboard", "data reports"). -->
+        <div class="placeholder dashboard-ph">
+          <span>[Dashboard Screenshot]</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3) VIDEO SHOWCASE -->
+  <section class="video-wrap">
+    <div class="container reveal">
+      <div class="section-head">
+        <h2>Watch LinkMeta in Action</h2>
+      </div>
+
+      <!-- IMAGE PLACEHOLDER: Video thumbnail / product walkthrough still frame
+           Suggested sources: unsplash.com (search: "team presentation", "laptop workspace"),
+           undraw.co (search: "video call", "presentation", "online demo"). -->
+      <div class="video-box">
+        <button class="play-btn" aria-label="Play LinkMeta video"></button>
+        <div class="video-label">[Video Thumbnail]</div>
+      </div>
+      <p class="video-caption">See how LinkMeta works in 90 seconds</p>
+    </div>
+  </section>
+
+  <!-- 4) PAIN POINTS -->
+  <section class="pain">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Global Growth Shouldn't Feel Fragmented</h2>
+        <p>Most teams lose momentum due to disconnected tools and manual execution.</p>
+      </div>
+      <div class="cards-3">
+        <article class="card reveal">
+          <h3>Manual Localization</h3>
+          <p>Translating product data and pages market by market slows launch cycles.</p>
+        </article>
+        <article class="card reveal">
+          <h3>Disconnected Ops</h3>
+          <p>Logistics, inventory, and storefront updates happen across too many systems.</p>
+        </article>
+        <article class="card reveal">
+          <h3>Scattered Reporting</h3>
+          <p>Regional performance insights are delayed, making strategy reactive.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5) ONE PLATFORM -->
+  <section>
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>One Platform for Every Global Move</h2>
+        <p>From launch to fulfillment, LinkMeta keeps your teams aligned in one system.</p>
+      </div>
+
+      <div class="platform-card reveal">
+        <!-- IMAGE PLACEHOLDER: Unified product mockup (storefront + operations + analytics view)
+             Suggested sources: unsplash.com (search: "productivity app", "digital workspace"),
+             undraw.co (search: "data visualization", "team collaboration"). -->
+        <div class="placeholder product-ph">
+          <span>[Unified Product Mockup]</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6) FEATURES -->
+  <section class="features">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Built for Speed, Precision, and Scale</h2>
+      </div>
+      <div class="features-grid">
+        <article class="card reveal">
+          <h3>AI Store Builder</h3>
+          <p>Create localized storefronts with adaptive layouts and market-aware templates.</p>
+        </article>
+        <article class="card reveal">
+          <h3>Smart Localization</h3>
+          <p>Translate content, currency, and context to fit language and cultural nuance.</p>
+        </article>
+        <article class="card reveal">
+          <h3>Global Logistics</h3>
+          <p>Automate shipping rules, tax handling, and cross-border fulfillment workflows.</p>
+        </article>
+        <article class="card reveal">
+          <h3>Unified Analytics</h3>
+          <p>Track demand and revenue by region with real-time dashboards.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7) AI COPILOT -->
+  <section class="copilot">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>AI Copilot for Global Teams</h2>
+        <p>Ask for market insights, launch checklists, and instant operational guidance.</p>
+      </div>
+
+      <div class="chat-shell reveal">
+        <div id="chatMessages" class="chat-messages">
+          <div class="bubble bot">Hi! I can help localize your catalog and prepare launch plans by region.</div>
+          <div class="bubble bot">Try asking: âPrepare my launch checklist for Germany.â</div>
+        </div>
+        <div class="chat-input-wrap">
+          <input id="chatInput" class="chat-input" type="text" placeholder="Type your message..." />
+          <button id="chatSend" class="btn btn-primary" type="button">Send</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8) STATS -->
+  <section class="stats" id="stats">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Trusted by Fast-Scaling Brands</h2>
+      </div>
+      <div class="stats-grid">
+        <div class="stat reveal">
+          <div class="stat-num" data-target="1200" data-prefix="">0</div>
+          <p>Active Stores</p>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-num" data-target="98" data-suffix="%">0</div>
+          <p>Localization Accuracy</p>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-num" data-target="75" data-suffix="+">0</div>
+          <p>Markets Supported</p>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-num" data-target="3.2" data-prefix="$" data-suffix="M">0</div>
+          <p>Monthly GMV Processed</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9) PRICING -->
+  <section>
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Pricing That Grows With You</h2>
+        <p>Start lean, then unlock advanced automation when your expansion accelerates.</p>
+      </div>
+
+      <div class="pricing-grid">
+        <article class="price-card reveal">
+          <h3>Starter</h3>
+          <div class="price">$49 <small>/month</small></div>
+          <ul class="features-list">
+            <li>1 storefront</li>
+            <li>Basic localization</li>
+            <li>Standard analytics</li>
+            <li>Email support</li>
+          </ul>
+          <a href="#" class="btn btn-secondary">Choose Starter</a>
+        </article>
+
+        <article class="price-card featured reveal">
+          <h3>Growth</h3>
+          <div class="price">$149 <small>/month</small></div>
+          <ul class="features-list">
+            <li>5 storefronts</li>
+            <li>AI localization + QA</li>
+            <li>Global logistics automation</li>
+            <li>Priority support</li>
+          </ul>
+          <a href="#" class="btn btn-primary">Choose Growth</a>
+        </article>
+
+        <article class="price-card reveal">
+          <h3>Scale</h3>
+          <div class="price">Custom</div>
+          <ul class="features-list">
+            <li>Unlimited storefronts</li>
+            <li>Advanced workflow orchestration</li>
+            <li>Dedicated success manager</li>
+            <li>Enterprise SLAs</li>
+          </ul>
+          <a href="#" class="btn btn-secondary">Contact Sales</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10) CTA + FOOTER -->
+  <section class="cta-footer">
+    <div class="container">
+      <div class="cta-card reveal">
+        <h2>Ready to Launch Everywhere?</h2>
+        <p>Go live in new markets faster with one AI-first commerce operating system.</p>
+        <div class="hero-actions" style="justify-content:center; margin-top:1rem;">
+          <a href="#" class="btn btn-primary">Get Started</a>
+          <a href="#" class="btn btn-secondary">Schedule Demo</a>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <span>Â© 2025 LinkMeta. All rights reserved.</span>
+        <span>Privacy â¢ Terms â¢ Contact</span>
+      </footer>
+    </div>
+  </section>
+
+  <script>
+    // Scroll reveal animation
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(el => revealObserver.observe(el));
+
+    // Animated counters
+    const statNums = document.querySelectorAll('.stat-num');
+    let hasCounted = false;
+
+    function animateValue(el, target, duration = 1600) {
+      const prefix = el.dataset.prefix || "";
+      const suffix = el.dataset.suffix || "";
+      const start = 0;
+      const startTime = performance.now();
+
+      function tick(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = start + (target - start) * eased;
+
+        const isDecimal = String(target).includes(".");
+        el.textContent = prefix + (isDecimal ? value.toFixed(1) : Math.floor(value)) + suffix;
+
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    const statsSection = document.getElementById('stats');
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !hasCounted) {
+          statNums.forEach((num) => animateValue(num, Number(num.dataset.target)));
+          hasCounted = true;
+        }
+      });
+    }, { threshold: 0.35 });
+    statsObserver.observe(statsSection);
+
+    // Simple interactive AI chat demo
+    const chatInput = document.getElementById('chatInput');
+    const chatSend = document.getElementById('chatSend');
+    const chatMessages = document.getElementById('chatMessages');
+
+    function addBubble(text, role) {
+      const div = document.createElement('div');
+      div.className = `bubble ${role}`;
+      div.textContent = text;
+      chatMessages.appendChild(div);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function botReply(userText) {
+      const q = userText.toLowerCase();
+      if (q.includes('germany')) {
+        return "Great choice. I generated a Germany checklist: VAT setup, German copy localization, local payment methods, and DHL shipping rules.";
+      }
+      if (q.includes('pricing')) {
+        return "For multi-market expansion, most teams start on Growth and upgrade to Scale once monthly GMV crosses $1M.";
+      }
+      if (q.includes('launch')) {
+        return "Launch plan ready: storefront localization, currency + tax mapping, logistics validation, and regional ad tracking setup.";
+      }
+      return "I can help with launch plans, localization strategy, logistics automation, and market-specific growth recommendations.";
+    }
+
+    function handleSend() {
+      const value = chatInput.value.trim();
+      if (!value) return;
+      addBubble(value, 'user');
+      chatInput.value = "";
+      setTimeout(() => addBubble(botReply(value), 'bot'), 420);
+    }
+
+    chatSend.addEventListener('click', handleSend);
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleSend();
+    });
+  </script>
+</body>
+</html>
+```

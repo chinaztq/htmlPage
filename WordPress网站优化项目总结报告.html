@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WordPress 网站技术改造项目 · 阶段性总结</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,800&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;800&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1410;
+    --bg-soft: #131c17;
+    --bg-card: #18221c;
+    --line: #243029;
+    --line-soft: #1c2620;
+    --ink: #fafaf6;
+    --ink-soft: #ffffff;
+    --ink-muted: #ebe8de;
+    --accent: #b8e94a;
+    --accent-soft: #2da764;
+    --accent-warm: #e8c66b;
+    --danger: #e87a5a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Manrope', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(184, 233, 74, 0.08), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(45, 167, 100, 0.06), transparent);
+  }
+
+  /* —— 装饰性网格 —— */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* —— 噪点 —— */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.4'/></svg>");
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 1;
+    mix-blend-mode: overlay;
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+
+  /* —— 顶栏 —— */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px 48px;
+    border-bottom: 1px solid var(--line-soft);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+  }
+  .topbar .logo {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .topbar .meta { display: flex; gap: 32px; }
+  .topbar .meta span::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  /* —— Hero —— */
+  .hero {
+    padding: 100px 0 80px;
+    position: relative;
+  }
+
+  .hero .stamp {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 32px;
+    text-transform: uppercase;
+  }
+
+  .hero h1 {
+    font-family: 'Fraunces', 'Noto Serif SC', serif;
+    font-weight: 300;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+    color: var(--ink);
+  }
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .hero h1 .underline {
+    background: linear-gradient(transparent 70%, rgba(184, 233, 74, 0.3) 70%);
+    padding: 0 4px;
+  }
+
+  .hero .lede {
+    font-size: 19px;
+    color: var(--ink-soft);
+    max-width: 720px;
+    line-height: 1.7;
+    margin-bottom: 56px;
+    font-weight: 300;
+  }
+
+  /* —— 顶部信息条 —— */
+  .info-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin-top: 24px;
+  }
+  .info-strip > div {
+    padding: 24px 28px;
+    border-right: 1px solid var(--line);
+  }
+  .info-strip > div:last-child { border-right: none; }
+  .info-strip .k {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .info-strip .v {
+    font-family: 'Fraunces', 'Noto Serif SC', serif;
+    font-size: 20px;
+    color: var(--ink);
+    font-weight: 400;
+  }
+  .info-strip .v.team-names {
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+  }
+
+  /* —— 段落区块 —— */
+  section {
+    padding: 100px 0;
+    position: relative;
+  }
+
+  .section-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-tag::before {
+    content: '';
+    width: 28px; height: 1px;
+    background: var(--accent);
+  }
+
+  h2 {
+    font-family: 'Fraunces', 'Noto Serif SC', serif;
+    font-weight: 300;
+    font-size: clamp(36px, 4.5vw, 56px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 24px;
+  }
+  h2 em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  .section-intro {
+    color: var(--ink-soft);
+    font-size: 17px;
+    max-width: 760px;
+    line-height: 1.75;
+    margin-bottom: 64px;
+    font-weight: 300;
+  }
+
+  /* —— 性能数据 hero —— */
+  .perf-hero {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 80px 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .perf-hero::before {
+    content: 'PERFORMANCE';
+    position: absolute;
+    top: -20px;
+    right: -10px;
+    font-family: 'Fraunces', serif;
+    font-size: 220px;
+    font-weight: 800;
+    color: rgba(184, 233, 74, 0.04);
+    line-height: 1;
+    pointer-events: none;
+    letter-spacing: -0.05em;
+  }
+  .perf-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 48px;
+    align-items: center;
+    position: relative;
+  }
+  .perf-cell .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--ink-muted);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .perf-cell .num {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(80px, 12vw, 160px);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .perf-cell .num small {
+    font-size: 0.35em;
+    color: var(--ink-muted);
+    font-weight: 400;
+    margin-left: 8px;
+    letter-spacing: 0;
+  }
+  .perf-cell.before .num { color: var(--ink-soft); text-decoration: line-through; text-decoration-color: var(--danger); text-decoration-thickness: 3px; }
+  .perf-cell.after .num { color: var(--accent); }
+  .perf-arrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--accent);
+    text-align: center;
+    letter-spacing: 0.1em;
+  }
+  .perf-arrow .icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .perf-arrow .pct {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    color: var(--accent);
+    font-style: italic;
+    margin-top: 8px;
+    display: block;
+  }
+  .perf-caption {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-size: 15px;
+    font-style: italic;
+    font-family: 'Fraunces', 'Noto Serif SC', serif;
+    line-height: 1.7;
+  }
+
+  /* —— 任务列表 —— */
+  .task-group {
+    margin-bottom: 56px;
+  }
+  .task-group:last-child {
+    margin-bottom: 0;
+  }
+  .task-group-header {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    padding: 24px 0 20px;
+    border-top: 2px solid var(--accent);
+    margin-bottom: 0;
+  }
+  .task-group-header .group-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .task-group-header h3 {
+    font-family: 'Fraunces', 'Noto Serif SC', serif;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--ink-soft);
+  }
+  .task-group-header h3 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .task-group-header .count {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.15em;
+  }
+  .task-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .task {
+    border-bottom: 1px solid var(--line);
+    padding: 36px 32px 36px 0;
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 24px;
+    transition: background 0.4s ease;
+    position: relative;
+  }
+  .task:nth-child(odd) { border-right: 1px solid var(--line); padding-right: 40px; }
+  .task:nth-child(even) { padding-left: 40px; }
+  .task:hover { background: rgba(184, 233, 74, 0.03); }
+  .task .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    padding-top: 4px;
+  }
+  .task h3 {
+    font-family: 'Fraunces', 'Noto Serif SC', serif;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+  .task p {
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .task.featured {
+    background: rgba(184, 233, 74, 0.04);
+  }
+  .task.featured h3 { color: var(--accent); }
+  .task.featured h3::after {
+    content: '★';
+    margin-left: 8px;
+    color: var(--accent-warm);
+    font-size: 14px;
+    vertical-align: super;
+  }
+
+  /* —— AI 能力区 —— */
+  .ai-block {
+    background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-soft) 100%);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 72px 64px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 24px;
+  }
+  .ai-block::before {
+    content: '✦';
+    position: absolute;
+    top: 30px; right: 40px;
+    font-size: 120px;
+    color: rgba(184, 233, 74, 0.08);
+    line-height: 1;
+  }
+  .ai-block .stamp {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    background: var(--accent);
+    color: var(--bg);
+    padding: 5px 12px;
+    margin-bottom: 28px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .ai-block h3 {
+    font-family: 'Fraunces', 'Noto Serif SC', serif;
+    font-size: clamp(28px, 3.5vw, 40px);
+    font-weight: 400;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+  .ai-block h3 em { font-style: italic; color: var(--accent); }
+  .ai-block .desc {
+    color: var(--ink-soft);
+    font-size: 16px;
+    max-width: 720px;
+    margin-bottom: 48px;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+  .ai-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    position: relative;
+    z-index: 1;
+  }
+  .ai-card {
+    background: rgba(13, 20, 16, 0.5);
+    border: 1px solid var(--line);
+    padding: 32px;
+    border-radius: 2px;
+    backdrop-filter: blur(10px);
+  }
+  .ai-card .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .ai-card h4 {
+    font-family: 'Fraunces', 'Noto Serif SC', serif;
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+  }
+  .ai-card p {
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .ai-flow {
+    margin-top: 40px;
+    padding: 24px;
+    background: rgba(13, 20, 16, 0.4);
+    border-left: 2px solid var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.8;
+  }
+  .ai-flow strong { color: var(--accent); }
+
+  /* —— 价值列表 —— */
+  .value-list {
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .value-item {
+    padding: 32px 0;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .value-item .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    padding-top: 6px;
+  }
+  .value-item .body {
+    font-size: 16px;
+    color: var(--ink-soft);
+    line-height: 1.75;
+    font-weight: 300;
+  }
+  .value-item .body strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* —— 数字展示条 —— */
+  .stats-band {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-top: 64px;
+  }
+  .stats-band > div {
+    padding: 36px 32px;
+    border-right: 1px solid var(--line);
+    text-align: center;
+  }
+  .stats-band > div:last-child { border-right: none; }
+  .stats-band .big {
+    font-family: 'Fraunces', serif;
+    font-size: 56px;
+    font-weight: 300;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 12px;
+    letter-spacing: -0.03em;
+  }
+  .stats-band .big small {
+    font-size: 0.4em;
+    color: var(--ink-muted);
+    margin-left: 4px;
+  }
+  .stats-band .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+  }
+
+  /* —— 加班说明 —— */
+  .ot-block {
+    background: var(--bg-soft);
+    border-left: 3px solid var(--accent-warm);
+    padding: 40px 48px;
+    border-radius: 0 4px 4px 0;
+  }
+  .ot-block ul {
+    list-style: none;
+    margin-top: 20px;
+  }
+  .ot-block li {
+    padding: 10px 0;
+    color: var(--ink-soft);
+    font-size: 15px;
+    border-bottom: 1px dashed var(--line);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .ot-block li:last-child { border-bottom: none; }
+  .ot-block li::before {
+    content: '→';
+    color: var(--accent-warm);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* —— 后续计划 —— */
+  .plan-list {
+    display: grid;
+    gap: 16px;
+  }
+  .plan-item {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 24px;
+    padding: 24px 28px;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .plan-item:hover {
+    border-color: var(--accent);
+    transform: translateX(4px);
+  }
+  .plan-item .idx {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--accent);
+    font-style: italic;
+    line-height: 1;
+  }
+  .plan-item p {
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height: 1.65;
+    font-weight: 300;
+    padding-top: 4px;
+  }
+
+  /* —— 结尾 —— */
+  .closing {
+    text-align: center;
+    padding: 120px 0 80px;
+    border-top: 1px solid var(--line);
+    margin-top: 80px;
+  }
+  .closing blockquote {
+    font-family: 'Fraunces', 'Noto Serif SC', serif;
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.4;
+    max-width: 880px;
+    margin: 0 auto 48px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .closing blockquote::before { content: '"'; color: var(--accent); font-size: 1.5em; vertical-align: -0.2em; margin-right: 4px; }
+  .closing blockquote::after { content: '"'; color: var(--accent); font-size: 1.5em; vertical-align: -0.2em; margin-left: 4px; }
+  .closing .signature {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  /* —— 页脚 —— */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 40px 48px;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* —— 入场动画 —— */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero .stamp { animation: fadeUp 0.8s 0.1s both; }
+  .hero h1 { animation: fadeUp 0.8s 0.2s both; }
+  .hero .lede { animation: fadeUp 0.8s 0.4s both; }
+  .info-strip { animation: fadeUp 0.8s 0.6s both; }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* —— 响应式 —— */
+  @media (max-width: 900px) {
+    .container { padding: 0 24px; }
+    .topbar { padding: 20px 24px; flex-direction: column; gap: 16px; align-items: flex-start; }
+    .info-strip, .stats-band { grid-template-columns: 1fr 1fr; }
+    .info-strip > div, .stats-band > div { border-right: none; border-bottom: 1px solid var(--line); }
+    .info-strip > div:nth-child(2n), .stats-band > div:nth-child(2n) { border-right: none; }
+    .task-list { grid-template-columns: 1fr; }
+    .task:nth-child(odd) { border-right: none; padding: 32px 0; }
+    .task:nth-child(even) { padding: 32px 0; }
+    .perf-grid { grid-template-columns: 1fr; gap: 24px; text-align: center; }
+    .perf-arrow { transform: rotate(90deg); }
+    .ai-pair { grid-template-columns: 1fr; }
+    .value-item { grid-template-columns: 1fr; gap: 12px; }
+    .perf-hero, .ai-block { padding: 40px 28px; }
+    section { padding: 64px 0; }
+    .hero { padding: 60px 0 40px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 顶栏 -->
+<div class="topbar">
+  <span class="logo">// WP_OPTIMIZATION_2026</span>
+  <div class="meta">
+    <span>项目阶段性总结</span>
+    <span>2026.04</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="container">
+<section class="hero">
+  <span class="stamp">PROJECT REPORT · 阶段性汇报</span>
+  <h1>
+    十九天，<em>四人</em>，<br>
+    一次<span class="underline">完整的</span>站点重塑。
+  </h1>
+  <p class="lede">
+    针对瑞典等欧洲市场的 WordPress 站点进行全面性能优化、功能补齐与体验升级；
+    在 4 月 13 日至 5 月 1 日期间，技术团队 4 人协同完成 4 大类、21 项功能交付，
+    并首次将 AI 能力嵌入站点日常运营，使站点具备独立承接业务流量的能力。
+  </p>
+
+  <div class="info-strip">
+    <div>
+      <span class="k">Department</span>
+      <span class="v">技术团队</span>
+    </div>
+    <div>
+      <span class="k">Team</span>
+      <span class="v team-names">杨相金 · 赵保超<br>林佩燕 · 张同庆</span>
+    </div>
+    <div>
+      <span class="k">Headcount</span>
+      <span class="v">4 人</span>
+    </div>
+    <div>
+      <span class="k">Duration</span>
+      <span class="v">19 天</span>
+    </div>
+  </div>
+</section>
+
+<!-- 项目背景 -->
+<section class="reveal">
+  <div class="section-tag">01 / Background</div>
+  <h2>从 Shopify 退守，<em>到 WordPress 重建</em></h2>
+  <p class="section-intro">
+    公司旗下多个 Shopify 建站因产品性质相继被封，业务连续性面临挑战。在前期 WordPress
+    加班申请获批的基础上，本阶段的目标明确：在五一节点前交付一个能够独立承接欧洲市场流量、
+    且功能与体验全面对齐原 Shopify 站点的成熟版本，为旺季和世界杯流量做好准备。
+  </p>
+</section>
+
+<!-- 性能 Hero -->
+<section class="reveal">
+  <div class="section-tag">02 / Performance Lift</div>
+  <h2>速度，是<em>最直接的体验</em>。</h2>
+  <p class="section-intro">
+    采购并部署荷兰节点新服务器，将面向欧洲市场的网站迁移至新节点。
+    瑞典用户的页面加载时间发生了本阶段最具说服力的变化——
+  </p>
+
+  <div class="perf-hero">
+    <div class="perf-grid">
+      <div class="perf-cell before">
+        <div class="label">迁移前 / Before</div>
+        <div class="num">6.3<small>s</small></div>
+      </div>
+      <div class="perf-arrow">
+        <span class="icon">→</span>
+        OPTIMIZED
+        <span class="pct">−54%</span>
+      </div>
+      <div class="perf-cell after">
+        <div class="label">迁移后 / After</div>
+        <div class="num">2.9<small>s</small></div>
+      </div>
+    </div>
+    <p class="perf-caption">
+      6 秒以上的加载时间通常意味着用户大量流失，3 秒以内则进入"可用"区间。
+      这次迁移相当于把站点从「勉强可访问」直接拉到了「可以正常承接流量」的水平。
+    </p>
+  </div>
+</section>
+
+<!-- 工作内容 -->
+<section class="reveal">
+  <div class="section-tag">03 / Deliverables</div>
+  <h2>结构化的<em>交付清单</em>。</h2>
+  <p class="section-intro">
+    本阶段工作分为四大类：基础设施、页面优化、组件接入与组件研发；另有 AI 能力建设作为独立亮点单列下一节。
+  </p>
+
+  <!-- A. 基础设施 -->
+  <div class="task-group">
+    <div class="task-group-header">
+      <span class="group-num">A</span>
+      <h3>基础设施 <em>· Infrastructure</em></h3>
+      <span class="count">1 项</span>
+    </div>
+    <div class="task-list">
+      <div class="task">
+        <div class="num">A1</div>
+        <div>
+          <h3>服务器迁移与性能优化</h3>
+          <p>采购部署荷兰节点新服务器，瑞典用户页面加载时间由 6.3 秒降至 2.9 秒，降幅约 54%。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B. 页面优化 -->
+  <div class="task-group">
+    <div class="task-group-header">
+      <span class="group-num">B</span>
+      <h3>页面优化 <em>· Page Optimization</em></h3>
+      <span class="count">4 项</span>
+    </div>
+    <div class="task-list">
+      <div class="task">
+        <div class="num">B1</div>
+        <div>
+          <h3>主题选型与替换</h3>
+          <p>经多轮评估与对比测试，选用性能更优、用户体验更佳的全新主题，作为后续所有页面优化与组件接入的基础底座。</p>
+        </div>
+      </div>
+      <div class="task">
+        <div class="num">B2</div>
+        <div>
+          <h3>优化首页</h3>
+          <p>更换首页页面模板，调整 Elementor 楼层产品列表排序与前 300 销量排序；统一页眉右侧图标风格、整站更换皮肤与主题色；移动端导航栏配置自动吸顶。</p>
+        </div>
+      </div>
+      <div class="task">
+        <div class="num">B3</div>
+        <div>
+          <h3>优化购物车页面</h3>
+          <p>系统性改造购物车页体验，移除 Elementor 自带侧边栏购物车；新增粘性购物车交互；调整在线客服窗口位置，提升下单链路通畅度。</p>
+        </div>
+      </div>
+      <div class="task">
+        <div class="num">B4</div>
+        <div>
+          <h3>优化下单页面</h3>
+          <p>结账页流程精简、字段优化、视觉统一；产品详情页缩略图单行展示、细节图横滑、隐藏冗余字段、本地化 CTA 文案 "Lägg i varukorg"、价格颜色统一为 #2DA764。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C. 添加组件 -->
+  <div class="task-group">
+    <div class="task-group-header">
+      <span class="group-num">C</span>
+      <h3>添加组件 <em>· Component Integration</em></h3>
+      <span class="count">10 项</span>
+    </div>
+    <div class="task-list">
+      <div class="task">
+        <div class="num">C1</div>
+        <div>
+          <h3>购物车查看与挽回组件</h3>
+          <p>记录用户购物车状态，并对接 EDM 挽回流程，对未完成下单用户自动触发邮件挽回，提升二次转化。</p>
+        </div>
+      </div>
+      <div class="task">
+        <div class="num">C2</div>
+        <div>
+          <h3>尺码表组件</h3>
+          <p>产品详情页可独立挂载尺码表，运营可在后台灵活配置不同品类的尺码对照信息。</p>
+        </div>
+      </div>
+      <div class="task">
+        <div class="num">C3</div>
+        <div>
+          <h3>产品销量排名组件</h3>
+          <p>展示热销产品排序，强化爆款引导，辅助提升用户决策效率与店铺销量集中度。</p>
+        </div>
+      </div>
+      <div class="task">
+        <div class="num">C4</div>
+        <div>
+          <h3>悬浮视频组件</h3>
+          <p>支持在页面任意位置嵌入悬浮视频播放，丰富内容呈现方式，提升落地页内容质量。</p>
+        </div>
+      </div>
+      <div class="task">
+        <div class="num">C5</div>
+        <div>
+          <h3>产品组合组件</h3>
+          <p>展示产品组合搭配方案，引导客单价提升，与下方研发的产品组合相关插件形成完整链路。</p>
+        </div>
+      </div>
+      <div class="task">
+        <div class="num">C6</div>
+        <div>
+          <h3>支付组件</h3>
+          <p>上线新支付插件并接入新增支付通道，扩充欧洲市场可用支付方式，降低弃单风险。</p>
+        </div>
+      </div>
+      <div class="task">
+        <div class="num">C7</div>
+        <div>
+          <h3>在线客服组件</h3>
+          <p>接入在线客服模块并优化展示位置，便于瑞典用户在购物过程中快速获得咨询响应。</p>
+        </div>
+      </div>
+      <div class="task">
+        <div class="num">C8</div>
+        <div>
+          <h3>心愿单模块</h3>
+          <p>用户可收藏感兴趣的产品至心愿单，提升二次访问与转化机会。</p>
+        </div>
+      </div>
+      <div class="task">
+        <div class="num">C9</div>
+        <div>
+          <h3>产品详情页在线浏览人数</h3>
+          <p>实时展示当前正在浏览该产品的用户数量，增强紧迫感与社交证明，促进下单决策。</p>
+        </div>
+      </div>
+      <div class="task">
+        <div class="num">C10</div>
+        <div>
+          <h3>销售弹窗</h3>
+          <p>实时弹窗展示近期成交订单信息，营造活跃下单氛围，增强用户信任感。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- D. 研发组件 -->
+  <div class="task-group">
+    <div class="task-group-header">
+      <span class="group-num">D</span>
+      <h3>研发组件 <em>· Custom Development</em></h3>
+      <span class="count">5 项</span>
+    </div>
+    <div class="task-list">
+      <div class="task">
+        <div class="num">D1</div>
+        <div>
+          <h3>自动创建评论插件</h3>
+          <p>自研评论自动化插件，支持按规则批量生成产品评论，丰富产品页内容，缩短新品冷启动周期。</p>
+        </div>
+      </div>
+      <div class="task">
+        <div class="num">D2</div>
+        <div>
+          <h3>产品筛选插件</h3>
+          <p>自研后台可视化筛选配置插件，支持按产品分类、属性、标签、价格、库存等多维度自定义前台筛选条件，运营可独立配置无需技术介入。</p>
+        </div>
+      </div>
+      <div class="task">
+        <div class="num">D3</div>
+        <div>
+          <h3>印名印号插件（WordPress 版）</h3>
+          <p>基于 WordPress 框架自研原 Shopify 同等能力的印名印号插件，覆盖前端定制输入、价格联动、订单数据传递的完整链路，满足球衣类定制下单需求。</p>
+        </div>
+      </div>
+      <div class="task">
+        <div class="num">D4</div>
+        <div>
+          <h3>Klaviyo 对接组件</h3>
+          <p>研发与 Klaviyo 邮件营销平台的对接组件，实现用户行为数据、订单数据等关键节点向 Klaviyo 同步，支撑后续精准化的邮件触达策略。</p>
+        </div>
+      </div>
+      <div class="task">
+        <div class="num">D5</div>
+        <div>
+          <h3>订单自动同步至 ttmall</h3>
+          <p>研发订单同步链路，将站点订单实时自动同步至 ttmall 后台，避免人工导出/导入操作，保障订单履约链路的稳定与实时性。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI 能力专区 -->
+<section class="reveal">
+  <div class="section-tag">04 / AI Capability</div>
+  <h2>把 AI <em>嵌入运营</em>，而不只是写在 PPT 上。</h2>
+
+  <div class="ai-block">
+    <span class="stamp">★ HIGHLIGHT</span>
+    <h3>非技术同事，可以<em>直接</em>用自然语言管理网站。</h3>
+    <p class="desc">
+      本阶段的两项 AI 能力建设——MCP 服务器与产品组合 Skill——是项目的关键差异化产出。
+      它们使原本需要技术介入或大量手工操作的运营任务，现在可由 AI 自动完成。
+    </p>
+
+    <div class="ai-pair">
+      <div class="ai-card">
+        <div class="tag">Capability A · MCP Server</div>
+        <h4>瑞典站 MCP 服务器</h4>
+        <p>
+          为瑞典站 WordPress 搭建 Model Context Protocol 服务器，对接 AI 助手。
+          运营、内容编辑可通过自然语言完成产品查询、内容更新、批量调整等后台操作，
+          技术门槛被大幅降低，重复性工作交由 AI 处理。
+        </p>
+      </div>
+      <div class="ai-card">
+        <div class="tag">Capability B · Skill</div>
+        <h4>产品组合自动生成 Skill</h4>
+        <p>
+          专用 Skill 可自动遍历整站产品，按既定规则智能生成产品组合方案，
+          直接输出为 Excel 文件。配合任务 10 的导入模块，
+          原本运营需要数小时手工筛选配对的工作，AI 几分钟即可完成。
+        </p>
+      </div>
+    </div>
+
+    <div class="ai-flow">
+      闭环路径：<br>
+      <strong>AI 生成组合（Skill）</strong> &nbsp;→&nbsp; 输出 Excel &nbsp;→&nbsp;
+      <strong>一键导入（任务 10）</strong> &nbsp;→&nbsp; 上线
+    </div>
+  </div>
+</section>
+
+<!-- 项目价值 -->
+<section class="reveal">
+  <div class="section-tag">05 / Value Delivered</div>
+  <h2>这 19 天<em>带来了什么</em>。</h2>
+
+  <div class="value-list">
+    <div class="value-item">
+      <div class="tag">Infrastructure</div>
+      <div class="body">荷兰新服务器上线，瑞典用户页面平均加载时间由 6.3 秒降至 2.9 秒（<strong>降幅约 54%</strong>），访问体验与稳定性显著改善，为旺季流量承接奠定基础。</div>
+    </div>
+    <div class="value-item">
+      <div class="tag">Functionality</div>
+      <div class="body">WordPress 站点已具备印名印号、心愿单、粘性购物车、产品组合导入等核心能力，<strong>与原 Shopify 站点功能对齐</strong>，具备独立承接业务的能力。</div>
+    </div>
+    <div class="value-item">
+      <div class="tag">User Experience</div>
+      <div class="body">购物车、结账、产品详情页、移动端导航等核心转化链路完成系统性优化，整站视觉风格统一，<strong>预期对转化率与复购率均有正向贡献</strong>。</div>
+    </div>
+    <div class="value-item">
+      <div class="tag">Operation Efficiency</div>
+      <div class="body">产品组合批量导入、后台自定义筛选条件等功能上线后，运营同事<strong>可独立完成大量原本需要技术介入的配置工作</strong>。</div>
+    </div>
+    <div class="value-item">
+      <div class="tag">Payment</div>
+      <div class="body">新增支付通道扩充了欧洲用户的支付选择，<strong>有利于降低弃单率</strong>。</div>
+    </div>
+    <div class="value-item">
+      <div class="tag">AI Enablement</div>
+      <div class="body">通过 MCP 服务器与产品组合 Skill，公司在 AI 与电商的结合上<strong>迈出实质性一步</strong>。这不仅当下提升了协作效率，也为后续把 AI 进一步嵌入运营、客服、内容生产等环节积累了可复用的能力底座。</div>
+    </div>
+  </div>
+
+  <div class="stats-band">
+    <div>
+      <div class="big">4<small>大类</small></div>
+      <div class="label">交付模块</div>
+    </div>
+    <div>
+      <div class="big">20<small>项</small></div>
+      <div class="label">具体功能点</div>
+    </div>
+    <div>
+      <div class="big">−54<small>%</small></div>
+      <div class="label">加载时间降幅</div>
+    </div>
+    <div>
+      <div class="big">19<small>天</small></div>
+      <div class="label">项目周期</div>
+    </div>
+  </div>
+</section>
+
+<!-- 加班说明 -->
+<section class="reveal">
+  <div class="section-tag">06 / Overtime Note</div>
+  <h2>关于<em>加班情况</em>的说明。</h2>
+  <p class="section-intro">
+    为按节点完成上述全部交付内容，技术团队 4 人在项目周期内集中加班，开发、联调、测试、上线并行作业。
+  </p>
+  <div class="ot-block">
+    <ul>
+      <li>工作日延时加班（18:00 — 20:00）</li>
+      <li>两个周六研发人员进行加班</li>
+      <li>4 人全员协同推进，所有功能模块在 5 月 1 日前交付完毕</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 后续计划 -->
+<section class="reveal">
+  <div class="section-tag">07 / Next Steps</div>
+  <h2>下一阶段<em>关注点</em>。</h2>
+  <p class="section-intro">
+    当前交付的功能已全部上线运行，技术团队进入观察与持续优化阶段。
+  </p>
+  <div class="plan-list">
+    <div class="plan-item">
+      <div class="idx">i</div>
+      <p>线上各功能模块的稳定性与性能持续监控。</p>
+    </div>
+    <div class="plan-item">
+      <div class="idx">ii</div>
+      <p>根据运营、客服反馈进行针对性的体验微调。</p>
+    </div>
+    <div class="plan-item">
+      <div class="idx">iii</div>
+      <p>结合世界杯流量高峰提前完成压力测试与扩容预案。</p>
+    </div>
+    <div class="plan-item">
+      <div class="idx">iv</div>
+      <p>持续扩展 MCP 服务器与 Skill 的能力边界，把更多重复性运营工作交由 AI 处理。</p>
+    </div>
+    <div class="plan-item">
+      <div class="idx">v</div>
+      <p>根据业务需求规划下一阶段的功能迭代。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 结尾 -->
+<div class="closing">
+  <blockquote>
+    本阶段在既定 19 天周期内，4 名技术同事高强度协同作业，按计划完成了 WordPress 网站的全面优化与功能补齐工作。
+  </blockquote>
+  <div class="signature">— 技术团队 · 杨相金 / 赵保超 / 林佩燕 / 张同庆 · 2026.04</div>
+</div>
+
+</div>
+
+<footer>
+  <span>WP Optimization Project Summary · 2026</span>
+  <span>// END_OF_REPORT</span>
+</footer>
+
+<script>
+  // 滚动入场
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

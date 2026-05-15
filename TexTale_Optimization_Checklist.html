@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TexTale 优化清单 · Optimization Roadmap</title>
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&f[]=jetbrains-mono@400,500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F7F5EF;
+      --surface: #FFFFFF;
+      --surface-alt: #EFEDE6;
+      --border: #D8D5CC;
+      --border-strong: #B5B2A8;
+      --text: #0F1114;
+      --text-muted: #3F454D;
+      --text-faint: #6B7079;
+      --accent: #066D64;
+      --accent-dim: rgba(6, 109, 100, 0.12);
+      --p1: #A8230E;
+      --p1-dim: rgba(168, 35, 14, 0.12);
+      --p2: #8A5510;
+      --p2-dim: rgba(138, 85, 16, 0.13);
+      --p3: #1F6A40;
+      --p3-dim: rgba(31, 106, 64, 0.12);
+      --radius: 10px;
+      --radius-sm: 6px;
+      --font-sans: 'Satoshi', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 17px;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* Layout */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 32px 0 28px;
+      background: linear-gradient(180deg, rgba(14, 140, 130, 0.04) 0%, transparent 100%);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent) 0%, #0a6b63 100%);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: #FFFFFF;
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-name {
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-sub {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-faint);
+      margin-left: auto;
+    }
+
+    h1 {
+      font-size: clamp(32px, 4.5vw, 48px);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.12;
+      margin-bottom: 14px;
+    }
+
+    h1 .accent {
+      color: var(--accent);
+    }
+
+    .lede {
+      color: var(--text-muted);
+      max-width: 760px;
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    /* Progress Dashboard */
+    .dashboard {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 14px;
+      margin: 28px 0 0;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+    }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .stat-value {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-value .total {
+      color: var(--text-faint);
+      font-size: 22px;
+      font-weight: 500;
+    }
+
+    .stat-value.p1 {
+      color: var(--p1);
+    }
+
+    .stat-value.p2 {
+      color: var(--p2);
+    }
+
+    .stat-value.p3 {
+      color: var(--p3);
+    }
+
+    .progress-bar-wrap {
+      margin-top: 12px;
+      height: 6px;
+      background: var(--surface-alt);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent) 0%, #14a89c 100%);
+      border-radius: 99px;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .stat-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 0;
+      margin-top: 24px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(250, 250, 247, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 10;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 200px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 15px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-faint);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--surface-alt);
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .filter-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .filter-btn:hover {
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+
+    .filter-btn.active {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .filter-btn[data-filter="P1"].active {
+      background: var(--p1-dim);
+      border-color: var(--p1);
+      color: var(--p1);
+    }
+
+    .filter-btn[data-filter="P2"].active {
+      background: var(--p2-dim);
+      border-color: var(--p2);
+      color: var(--p2);
+    }
+
+    .filter-btn[data-filter="P3"].active {
+      background: var(--p3-dim);
+      border-color: var(--p3);
+      color: var(--p3);
+    }
+
+    .reset-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      transition: all 0.15s;
+    }
+
+    .reset-btn:hover {
+      color: var(--p1);
+      border-color: var(--p1);
+    }
+
+    /* Modules */
+    main {
+      padding: 32px 0 80px;
+    }
+
+    .module {
+      margin-bottom: 28px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: opacity 0.2s;
+    }
+
+    .module.hidden {
+      display: none;
+    }
+
+    .module-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: linear-gradient(180deg, var(--surface-alt) 0%, var(--surface) 100%);
+    }
+
+    .module-icon {
+      font-size: 22px;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      background: var(--surface-alt);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+
+    .module-title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+
+    .module-number {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-right: 6px;
+      font-weight: 500;
+    }
+
+    .module-counts {
+      margin-left: auto;
+      display: flex;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+
+    .count-pill {
+      padding: 4px 10px;
+      border-radius: 99px;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .count-pill.complete {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    /* Items */
+    .items {
+      padding: 6px 0;
+    }
+
+    .item {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 26px 68px 1fr;
+      gap: 16px;
+      align-items: start;
+      transition: background 0.15s, opacity 0.2s;
+    }
+
+    .item:last-child {
+      border-bottom: none;
+    }
+
+    .item:hover {
+      background: var(--surface-alt);
+    }
+
+    .item.hidden {
+      display: none;
+    }
+
+    .item.done {
+      opacity: 0.45;
+    }
+
+    .item.done .item-title {
+      text-decoration: line-through;
+      text-decoration-color: var(--text-faint);
+    }
+
+    .item-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 1.5px solid var(--border-strong);
+      border-radius: 5px;
+      background: #FFFFFF;
+      cursor: pointer;
+      position: relative;
+      margin-top: 3px;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .item-checkbox:hover {
+      border-color: var(--accent);
+    }
+
+    .item-checkbox:checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .item-checkbox:checked::after {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 2px;
+      width: 5px;
+      height: 10px;
+      border: solid #FFFFFF;
+      border-width: 0 2.5px 2.5px 0;
+      transform: rotate(45deg);
+    }
+
+    .priority-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 99px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-align: center;
+      border: 1px solid;
+      align-self: start;
+      margin-top: 2px;
+    }
+
+    .priority-badge.P1 {
+      color: var(--p1);
+      border-color: var(--p1);
+      background: var(--p1-dim);
+    }
+
+    .priority-badge.P2 {
+      color: var(--p2);
+      border-color: var(--p2);
+      background: var(--p2-dim);
+    }
+
+    .priority-badge.P3 {
+      color: var(--p3);
+      border-color: var(--p3);
+      background: var(--p3-dim);
+    }
+
+    .item-content {
+      min-width: 0;
+    }
+
+    .item-title {
+      font-size: 16.5px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 6px;
+      letter-spacing: -0.005em;
+    }
+
+    .item-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* Empty state */
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-faint);
+      display: none;
+    }
+
+    .empty.show {
+      display: block;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      color: var(--text-muted);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--border-strong);
+    }
+
+    footer a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* Conclusion box */
+    .conclusion {
+      background: linear-gradient(135deg, #FFFFFF 0%, var(--surface-alt) 100%);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 22px 26px;
+      margin: 28px 0 0;
+    }
+
+    .conclusion-title {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .conclusion p {
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .conclusion strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .dashboard {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stat-card:first-child {
+        grid-column: span 2;
+      }
+
+      .item {
+        grid-template-columns: 20px 56px 1fr;
+        padding: 14px 16px;
+        gap: 10px;
+      }
+
+      .module-header {
+        padding: 14px 16px;
+      }
+
+      .container {
+        padding: 0 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="container">
+      <div class="brand">
+        <div class="brand-logo">T</div>
+        <div class="brand-name">TexTale Optimization Roadmap</div>
+        <div class="brand-sub">v1.0 · 2026.05</div>
+      </div>
+      <h1>TexTale.tech <span class="accent">深度优化清单</span></h1>
+      <p class="lede">点击复选框标记完成进度，使用右上角 <strong>导出</strong> 保存进度为 JSON 文件，下次访问时 <strong>导入</strong> 恢复。</p>
+
+      <div class="dashboard">
+        <div class="stat-card">
+          <div class="stat-label">总体完成进度</div>
+          <div class="stat-value"><span id="done-count">0</span><span class="total"> / <span
+                id="total-count">0</span></span></div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="progress-fill" style="width: 0%"></div>
+          </div>
+          <div class="stat-sub" id="progress-pct">0% 完成 · 继续推进 →</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">P1 紧急</div>
+          <div class="stat-value p1"><span id="p1-done">0</span><span class="total"> / <span
+                id="p1-total">0</span></span></div>
+          <div class="stat-sub">信任与履约硬伤</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">P2 重要</div>
+          <div class="stat-value p2"><span id="p2-done">0</span><span class="total"> / <span
+                id="p2-total">0</span></span></div>
+          <div class="stat-sub">转化与 AOV 核心优化</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">P3 优化</div>
+          <div class="stat-value p3"><span id="p3-done">0</span><span class="total"> / <span
+                id="p3-total">0</span></span></div>
+          <div class="stat-sub">长期增长与品牌资产</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="controls">
+      <input type="text" class="search-input" placeholder="搜索优化项 …" id="search">
+      <div class="filter-group">
+        <button class="filter-btn active" data-filter="all">全部</button>
+        <button class="filter-btn" data-filter="P1">P1</button>
+        <button class="filter-btn" data-filter="P2">P2</button>
+        <button class="filter-btn" data-filter="P3">P3</button>
+        <button class="filter-btn" data-filter="todo">待办</button>
+        <button class="filter-btn" data-filter="done">已完成</button>
+      </div>
+      <button class="reset-btn" id="export" title="导出进度为 JSON 文件">↓ 导出</button>
+      <button class="reset-btn" id="import" title="导入之前的进度文件">↑ 导入</button>
+      <button class="reset-btn" id="reset">清空</button>
+      <input type="file" id="import-file" accept=".json" style="display:none">
+    </div>
+  </div>
+
+  <main>
+    <div class="container">
+      <div id="modules-wrap"></div>
+      <div class="empty" id="empty">没有匹配的项目</div>
+
+      <div class="conclusion">
+        <div class="conclusion-title">核心结论</div>
+        <p>TexTale 的<strong>品牌定位、产品差异化（高科技面料 +
+            可持续认证）和购物车阶梯赠品机制</strong>均属于同类品牌中的领先设计，核心优势扎实。当前最大的增长瓶颈是<strong>流量捕获和私域留存体系薄弱</strong>——大量访客看完走了，没有邮件弹窗、没有会员引导、没有弃单追回。修复这一环节是当前
+          ROI 最高的优化方向，其次是将已有的强势机制（阶梯赠品、认证背书）的曝光位置前置，让更多用户在更早的触点感知到这些价值。最后，履约与退货政策的硬伤（中国直发时效、30% 退货手续费、过度包装）必须优先修复，否则
+          Premium + Sustainable 的品牌叙事将持续被自身执行短板拖累。</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+
+  </footer>
+
+  <script src="data.js"></script>
+  <script>
+    // 内存状态（部署环境不支持 localStorage，使用导出/导入 JSON 持久化）
+    let state = {};
+    let currentFilter = 'all';
+    let currentSearch = '';
+
+    const wrap = document.getElementById('modules-wrap');
+    const empty = document.getElementById('empty');
+
+    function itemKey(modId, idx) { return `${modId}-${idx}`; }
+
+    function render() {
+      wrap.innerHTML = '';
+      MODULES.forEach(mod => {
+        const moduleEl = document.createElement('section');
+        moduleEl.className = 'module';
+        moduleEl.dataset.moduleId = mod.id;
+
+        const doneInMod = mod.items.filter((_, i) => state[itemKey(mod.id, i)]).length;
+
+        moduleEl.innerHTML = `
+        <div class="module-header">
+          <div class="module-icon">${mod.icon}</div>
+          <div>
+            <div class="module-title"><span class="module-number">M${String(mod.id).padStart(2, '0')}</span>${mod.name}</div>
+          </div>
+          <div class="module-counts">
+            <span class="count-pill ${doneInMod === mod.items.length ? 'complete' : ''}">${doneInMod}/${mod.items.length}</span>
+          </div>
+        </div>
+        <div class="items"></div>
+      `;
+        const itemsEl = moduleEl.querySelector('.items');
+        mod.items.forEach((item, idx) => {
+          const key = itemKey(mod.id, idx);
+          const done = !!state[key];
+          const itemEl = document.createElement('div');
+          itemEl.className = 'item' + (done ? ' done' : '');
+          itemEl.dataset.priority = item.p;
+          itemEl.dataset.done = done;
+          itemEl.dataset.search = (item.title + ' ' + item.desc + ' ' + mod.name).toLowerCase();
+          itemEl.innerHTML = `
+          <input type="checkbox" class="item-checkbox" ${done ? 'checked' : ''} data-key="${key}" aria-label="标记完成">
+          <span class="priority-badge ${item.p}">${item.p}</span>
+          <div class="item-content">
+            <div class="item-title">${item.title}</div>
+            <div class="item-desc">${item.desc}</div>
+          </div>
+        `;
+          itemsEl.appendChild(itemEl);
+        });
+        wrap.appendChild(moduleEl);
+      });
+
+      bindCheckboxes();
+      applyFilters();
+      updateStats();
+    }
+
+    function bindCheckboxes() {
+      document.querySelectorAll('.item-checkbox').forEach(cb => {
+        cb.addEventListener('change', e => {
+          const key = e.target.dataset.key;
+          if (e.target.checked) state[key] = true;
+          else delete state[key];
+          const item = e.target.closest('.item');
+          item.classList.toggle('done', e.target.checked);
+          item.dataset.done = e.target.checked;
+          updateStats();
+          updateModuleCounts();
+          applyFilters();
+        });
+      });
+    }
+
+    function updateModuleCounts() {
+      MODULES.forEach(mod => {
+        const doneInMod = mod.items.filter((_, i) => state[itemKey(mod.id, i)]).length;
+        const moduleEl = wrap.querySelector(`[data-module-id="${mod.id}"]`);
+        const pill = moduleEl.querySelector('.count-pill');
+        pill.textContent = `${doneInMod}/${mod.items.length}`;
+        pill.classList.toggle('complete', doneInMod === mod.items.length);
+      });
+    }
+
+    function updateStats() {
+      const all = MODULES.flatMap(m => m.items.map((it, i) => ({ ...it, key: itemKey(m.id, i) })));
+      const total = all.length;
+      const done = all.filter(it => state[it.key]).length;
+      document.getElementById('done-count').textContent = done;
+      document.getElementById('total-count').textContent = total;
+      const pct = total ? Math.round(done / total * 100) : 0;
+      document.getElementById('progress-fill').style.width = pct + '%';
+      const subEl = document.getElementById('progress-pct');
+      if (pct === 0) subEl.textContent = '0% 完成 · 开始第一项 →';
+      else if (pct < 100) subEl.textContent = pct + '% 完成 · 继续推进 →';
+      else subEl.textContent = '🎉 100% 完成 · 恭喜！';
+
+      ['P1', 'P2', 'P3'].forEach(p => {
+        const items = all.filter(it => it.p === p);
+        document.getElementById(p.toLowerCase() + '-total').textContent = items.length;
+        document.getElementById(p.toLowerCase() + '-done').textContent = items.filter(it => state[it.key]).length;
+      });
+    }
+
+    function applyFilters() {
+      let visibleCount = 0;
+      document.querySelectorAll('.item').forEach(item => {
+        const p = item.dataset.priority;
+        const done = item.dataset.done === 'true';
+        const text = item.dataset.search;
+        let visible = true;
+        if (currentFilter === 'P1' || currentFilter === 'P2' || currentFilter === 'P3') {
+          visible = (p === currentFilter);
+        } else if (currentFilter === 'todo') {
+          visible = !done;
+        } else if (currentFilter === 'done') {
+          visible = done;
+        }
+        if (visible && currentSearch && !text.includes(currentSearch)) visible = false;
+        item.classList.toggle('hidden', !visible);
+        if (visible) visibleCount++;
+      });
+      // hide modules with no visible items
+      document.querySelectorAll('.module').forEach(mod => {
+        const hasVisible = mod.querySelectorAll('.item:not(.hidden)').length > 0;
+        mod.classList.toggle('hidden', !hasVisible);
+      });
+      empty.classList.toggle('show', visibleCount === 0);
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        applyFilters();
+      });
+    });
+
+    document.getElementById('search').addEventListener('input', e => {
+      currentSearch = e.target.value.trim().toLowerCase();
+      applyFilters();
+    });
+
+    document.getElementById('reset').addEventListener('click', () => {
+      if (confirm('确认清空所有勾选进度？此操作不可撤销。')) {
+        state = {};
+        render();
+      }
+    });
+
+    // 导出进度为 JSON 文件
+    document.getElementById('export').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const date = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = `textale-checklist-${date}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // 导入进度
+    document.getElementById('import').addEventListener('click', () => {
+      document.getElementById('import-file').click();
+    });
+    document.getElementById('import-file').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const data = JSON.parse(ev.target.result);
+          if (typeof data !== 'object') throw new Error('格式错误');
+          state = data;
+          render();
+          alert('进度已恢复');
+        } catch (err) {
+          alert('文件解析失败：' + err.message);
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    });
+
+    render();
+  </script>
+
+  <script data-pplx-inline-edit>
+    (function () {
+      if (window === window.top) return;
+
+      const allowedParentOrigins = [];
+      const MAX_FONT_BYTES = 500 * 1024;
+      const MAX_TOTAL_FONT_BYTES = 2 * 1024 * 1024;
+      let scrollForwarding = false;
+      let scrollRaf = 0;
+      let trustedTopOrigin = null;
+
+      // Allow entries like "https://*.preview.i.perplexity.ai" — the wildcard
+      // matches a single DNS label (no dots), so "https://*.foo" cannot stretch
+      // across multiple labels.
+      function matchesAllowedOrigin(origin) {
+        if (!origin) return false;
+        for (const entry of allowedParentOrigins) {
+          if (!entry.includes("*")) {
+            if (entry === origin) return true;
+            continue;
+          }
+          const pattern = new RegExp(
+            "^" +
+            entry.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[^.]+") +
+            "$",
+          );
+          if (pattern.test(origin)) return true;
+        }
+        return false;
+      }
+
+      // Trust decision: when the sender is same-origin-visible (event.origin is a
+      // real origin like https://www.perplexity.ai) we trust event.origin directly.
+      // When event.origin is "null" (opaque broker srcdoc), we fall back to the
+      // broker's stamped `parentOrigin` to identify the top window. The fallback
+      // is claim-only — we rely on the browser's native `targetOrigin` enforcement
+      // on the response path (see postToTrustedTop) to ensure replies can't be
+      // delivered to anyone but the actual top window of that claimed origin.
+      function getTrustedParentOrigin(event) {
+        const forwardedParentOrigin =
+          typeof event.data.parentOrigin === "string" ? event.data.parentOrigin : null;
+        const parentOrigin = event.origin === "null" ? forwardedParentOrigin : event.origin;
+        return matchesAllowedOrigin(parentOrigin) ? parentOrigin : null;
+      }
+
+      // All responses go to window.top with targetOrigin = the allowlisted origin.
+      // An attacker that iframes us inside their own null-origin broker can claim
+      // any parentOrigin they like, but the browser will drop the reply whenever
+      // the real top's origin doesn't match — so the screenshot never leaves.
+      function postToTrustedTop(message) {
+        if (!trustedTopOrigin) return;
+        try {
+          window.top.postMessage(message, trustedTopOrigin);
+        } catch (_error) { }
+      }
+
+      function inlineAll(original, clone) {
+        if (original.nodeType !== 1 || clone.nodeType !== 1) return;
+
+        try {
+          const computedStyle = getComputedStyle(original);
+          // cssText on a computed style is the serialized declaration in modern
+          // Chromium/Safari — a single read beats enumerating ~400 longhand
+          // properties. Firefox returns "" here, so we fall back on empty.
+          const serialized = computedStyle.cssText;
+          if (serialized) {
+            clone.style.cssText = serialized;
+          } else {
+            const parts = new Array(computedStyle.length);
+            for (let index = 0; index < computedStyle.length; index += 1) {
+              const property = computedStyle[index];
+              parts[index] = `${property}:${computedStyle.getPropertyValue(property)};`;
+            }
+            clone.style.cssText = parts.join("");
+          }
+        } catch (_error) { }
+
+        const originalChildren = original.children;
+        const clonedChildren = clone.children;
+        for (
+          let index = 0;
+          index < originalChildren.length && index < clonedChildren.length;
+          index += 1
+        ) {
+          inlineAll(originalChildren[index], clonedChildren[index]);
+        }
+      }
+
+      function extractFontUrl(srcValue) {
+        const matches = [
+          ...srcValue.matchAll(
+            /url\(["']?([^"')]+)["']?\)(?:\s*format\(["']?([^"')]+)["']?\))?/gi,
+          ),
+        ];
+        if (matches.length === 0) return null;
+        const woff2 = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff2"));
+        if (woff2) return woff2[1];
+        const woff = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff"));
+        if (woff) return woff[1];
+        return matches[0][1];
+      }
+
+      // Cache resolved font URL -> data URI across captures. Fonts on a page
+      // essentially never change, and a batch run emits multiple captures back to
+      // back — without this we'd refetch + re-base64 every time.
+      const fontDataUriCache = new Map();
+      const SRC_DECLARATION_RE = /src\s*:\s*[^;}]+/i;
+
+      async function fetchAsDataUri(url) {
+        if (fontDataUriCache.has(url)) return fontDataUriCache.get(url);
+        let dataUri = null;
+        try {
+          const response = await fetch(url, { mode: "cors", credentials: "omit" });
+          if (response.ok) {
+            const blob = await response.blob();
+            if (blob.size <= MAX_FONT_BYTES) {
+              dataUri = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () =>
+                  resolve(typeof reader.result === "string" ? reader.result : null);
+                reader.onerror = () => resolve(null);
+                reader.readAsDataURL(blob);
+              });
+            }
+          }
+        } catch (_error) {
+          dataUri = null;
+        }
+        fontDataUriCache.set(url, dataUri);
+        return dataUri;
+      }
+
+      function collectFontFaceRuleTexts() {
+        const rules = [];
+        for (const sheet of document.styleSheets) {
+          let cssRules;
+          try {
+            cssRules = sheet.cssRules;
+          } catch (_error) {
+            continue;
+          }
+          if (!cssRules) continue;
+          for (const rule of cssRules) {
+            const cssText = rule.cssText || "";
+            if (cssText.startsWith("@font-face")) rules.push(cssText);
+          }
+        }
+        return rules;
+      }
+
+      async function buildInlinedFontCss() {
+        const ruleTexts = collectFontFaceRuleTexts();
+        if (ruleTexts.length === 0) return null;
+
+        const resolved = ruleTexts.map((cssText) => {
+          if (!SRC_DECLARATION_RE.test(cssText)) return null;
+          const srcMatch = cssText.match(/src\s*:\s*([^;}]+)[;}]/i);
+          if (!srcMatch) return null;
+          const url = extractFontUrl(srcMatch[1]);
+          if (!url) return null;
+          try {
+            return { cssText, url: new URL(url, document.baseURI).href };
+          } catch (_error) {
+            return null;
+          }
+        });
+
+        const dataUris = await Promise.all(
+          resolved.map((entry) => (entry ? fetchAsDataUri(entry.url) : Promise.resolve(null))),
+        );
+
+        const inlined = [];
+        let totalBytes = 0;
+        for (let index = 0; index < resolved.length; index += 1) {
+          const entry = resolved[index];
+          const dataUri = dataUris[index];
+          if (!entry || !dataUri) continue;
+          const approxBytes = dataUri.length * 0.75;
+          if (totalBytes + approxBytes > MAX_TOTAL_FONT_BYTES) break;
+          totalBytes += approxBytes;
+          inlined.push(entry.cssText.replace(SRC_DECLARATION_RE, `src: url("${dataUri}")`));
+        }
+        return inlined.length > 0 ? inlined.join("\n") : null;
+      }
+
+      function stripExternal(clone) {
+        const images = clone.querySelectorAll("img");
+        for (let index = 0; index < images.length; index += 1) {
+          const src = images[index].getAttribute("src");
+          if (src && !src.startsWith("data:")) images[index].removeAttribute("src");
+        }
+
+        const elements = clone.querySelectorAll("*");
+        for (let index = 0; index < elements.length; index += 1) {
+          const style = elements[index].style.cssText;
+          if (style && style.includes("url(")) {
+            elements[index].style.cssText = style.replace(
+              /url\(["']?(?!data:)[^)"']*["']?\)/gi,
+              "none",
+            );
+          }
+        }
+      }
+
+      function emitScroll() {
+        scrollRaf = 0;
+        if (!scrollForwarding) return;
+        postToTrustedTop({
+          type: "INLINE_EDIT_SCROLL",
+          scrollX: window.scrollX,
+          scrollY: window.scrollY,
+        });
+      }
+
+      window.addEventListener(
+        "scroll",
+        function () {
+          if (!scrollForwarding || scrollRaf) return;
+          scrollRaf = requestAnimationFrame(emitScroll);
+        },
+        { passive: true, capture: true },
+      );
+
+      async function handleCaptureRequest(event) {
+        const requestId = event.data.requestId;
+        const scrollX = window.scrollX;
+        const scrollY = window.scrollY;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        function postResult(dataUrl) {
+          postToTrustedTop({
+            type: "INLINE_EDIT_SCREENSHOT_RESULT",
+            requestId,
+            dataUrl,
+            scrollX,
+            scrollY,
+          });
+        }
+
+        try {
+          // Wait for any pending web fonts to resolve so both inline metrics and
+          // the @font-face inlining below see the same loaded faces.
+          if (document.fonts && document.fonts.ready) {
+            try {
+              await document.fonts.ready;
+            } catch (_error) { }
+          }
+
+          const clone = document.documentElement.cloneNode(true);
+          inlineAll(document.documentElement, clone);
+
+          const removedNodes = clone.querySelectorAll("script,link[rel=\"stylesheet\"],style");
+          for (let index = 0; index < removedNodes.length; index += 1) {
+            removedNodes[index].remove();
+          }
+
+          stripExternal(clone);
+
+          // Re-embed web fonts as data-URI @font-face rules so the SVG rasterizer
+          // can resolve them — external font URLs aren't fetched during
+          // foreignObject rendering, which would otherwise force a fallback face
+          // and change text metrics.
+          const inlinedFontCss = await buildInlinedFontCss();
+          if (inlinedFontCss) {
+            const styleEl = document.createElement("style");
+            styleEl.textContent = inlinedFontCss;
+            const head = clone.querySelector("head");
+            if (head) head.appendChild(styleEl);
+            else clone.insertBefore(styleEl, clone.firstChild);
+          }
+
+          const html = new XMLSerializer().serializeToString(clone);
+          const svg =
+            `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">` +
+            '<foreignObject width="100%" height="100%">' +
+            `<div xmlns="http://www.w3.org/1999/xhtml" style="width:${width}px;height:${height}px;overflow:hidden">` +
+            `<div style="transform:translate(-${scrollX}px,-${scrollY}px);transform-origin:top left">` +
+            html +
+            "</div></div></foreignObject></svg>";
+          const svgUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+          const image = new Image();
+          image.onload = function () {
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            canvas.getContext("2d").drawImage(image, 0, 0);
+            postResult(canvas.toDataURL("image/png"));
+          };
+          image.onerror = function () {
+            postResult(null);
+          };
+          image.src = svgUrl;
+        } catch (_error) {
+          postResult(null);
+        }
+      }
+
+      window.addEventListener("message", function (event) {
+        if (!event.data) return;
+        // Only accept messages from the direct parent frame. Blocks sibling /
+        // unrelated-window postMessage senders that could otherwise reach us.
+        if (event.source !== window.parent) return;
+
+        const trustedParentOrigin = getTrustedParentOrigin(event);
+        if (!trustedParentOrigin) return;
+        trustedTopOrigin = trustedParentOrigin;
+
+        if (event.data.type === "INLINE_EDIT_SCROLL_START") {
+          scrollForwarding = true;
+          emitScroll();
+          return;
+        }
+
+        if (event.data.type === "INLINE_EDIT_SCROLL_STOP") {
+          scrollForwarding = false;
+          if (scrollRaf) cancelAnimationFrame(scrollRaf);
+          scrollRaf = 0;
+          return;
+        }
+
+        if (event.data.type !== "INLINE_EDIT_CAPTURE_REQUEST") return;
+
+        handleCaptureRequest(event);
+      });
+    })();
+
+
+  </script>
+</body>
+
+</html>

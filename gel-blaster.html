@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gel Blaster 独立站 · 流量获取方案</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --paper: #F6F4EF;
+      --paper-2: #FFFFFF;
+      --surface: #FFFFFF;
+      --surface-2: #F0EDE6;
+      --line: rgba(26, 28, 32, .10);
+      --line-strong: rgba(26, 28, 32, .20);
+      --ink: #15181C;
+      --muted: #3D434B;
+      --faint: #6A7178;
+      --orange: #E8541E;
+      /* 合规橙口色 = 主强调 */
+      --orange-soft: #FBEAE0;
+      --gel: #0E9F5E;
+      /* 弹珠绿 = 次强调 */
+      --gel-soft: #E2F3EA;
+      --danger: #C8362F;
+      --danger-soft: #FBE9E7;
+      --mono: "Space Grotesk", system-ui, sans-serif;
+      --sans: "Noto Sans SC", "PingFang SC", system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 400;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 28px
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(900px 520px at 80% -10%, rgba(232, 84, 30, .10), transparent 60%),
+        radial-gradient(700px 520px at 4% 8%, rgba(14, 159, 94, .07), transparent 55%);
+    }
+
+    /* HERO */
+    .hero {
+      padding: 96px 0 58px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .32em;
+      text-transform: uppercase;
+      color: var(--orange);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 1px;
+      background: var(--orange)
+    }
+
+    .hero h1 {
+      font-family: var(--sans);
+      font-weight: 900;
+      font-size: clamp(34px, 6vw, 64px);
+      line-height: 1.08;
+      margin: 26px 0 8px;
+      letter-spacing: -.01em;
+    }
+
+    .hero h1 .hl {
+      color: var(--orange)
+    }
+
+    .hero .sub {
+      font-size: clamp(15px, 2vw, 18px);
+      color: var(--muted);
+      max-width: 660px;
+      font-weight: 400
+    }
+
+    .hero .sub b {
+      color: var(--ink);
+      font-weight: 500
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 34px
+    }
+
+    .chip {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .04em;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      padding: 7px 14px;
+      color: var(--muted);
+      background: var(--paper-2);
+    }
+
+    .chip b {
+      color: var(--gel);
+      font-weight: 600
+    }
+
+    /* LOOP */
+    .loop-sec {
+      padding: 64px 0 24px
+    }
+
+    .loop-title {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 36px;
+      text-align: center
+    }
+
+    .loop {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      position: relative
+    }
+
+    .stage {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 22px 18px;
+      position: relative;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .03);
+    }
+
+    .stage .n {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--orange);
+      letter-spacing: .1em
+    }
+
+    .stage h4 {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 8px 0 6px
+    }
+
+    .stage p {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.55
+    }
+
+    .stage::after {
+      content: "→";
+      position: absolute;
+      right: -13px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--mono);
+      color: var(--faint);
+      font-size: 18px;
+      z-index: 2;
+    }
+
+    .stage:last-child::after {
+      content: "↺";
+      color: var(--gel);
+      right: -9px
+    }
+
+    .loop-foot {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 13.5px;
+      color: var(--muted)
+    }
+
+    .loop-foot b {
+      color: var(--gel);
+      font-weight: 600
+    }
+
+    /* CONSTRAINT */
+    .constraint {
+      margin: 54px 0 8px;
+      border: 1px solid var(--line-strong);
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 26px 28px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+    }
+
+    .constraint .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .2em;
+      color: var(--danger);
+      font-weight: 600;
+      text-transform: uppercase
+    }
+
+    .constraint h3 {
+      font-size: 19px;
+      font-weight: 700;
+      margin: 10px 0 12px
+    }
+
+    .constraint p {
+      font-size: 14px;
+      color: var(--muted)
+    }
+
+    .constraint p b {
+      color: var(--ink);
+      font-weight: 500
+    }
+
+    .c-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px
+    }
+
+    .c-card {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: 16px 18px
+    }
+
+    .c-card.red {
+      background: var(--danger-soft);
+      border-color: rgba(200, 54, 47, .22)
+    }
+
+    .c-card.amber {
+      background: var(--orange-soft);
+      border-color: rgba(232, 84, 30, .22)
+    }
+
+    .c-card .h {
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block
+    }
+
+    .dot.red {
+      background: var(--danger)
+    }
+
+    .dot.amber {
+      background: var(--orange)
+    }
+
+    .c-card p {
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: var(--muted)
+    }
+
+    .c-card p b {
+      color: var(--ink)
+    }
+
+    /* SECTION */
+    .sec {
+      padding: 62px 0 8px
+    }
+
+    .sec-head {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 8px;
+      flex-wrap: wrap
+    }
+
+    .sec-head .k {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: .2em;
+      color: var(--orange);
+      font-weight: 600
+    }
+
+    .sec-head h2 {
+      font-size: clamp(22px, 3.4vw, 30px);
+      font-weight: 900;
+      letter-spacing: -.01em
+    }
+
+    .sec-desc {
+      color: var(--muted);
+      font-size: 14.5px;
+      max-width: 700px;
+      margin-bottom: 34px
+    }
+
+    /* ENGINES */
+    .engine {
+      display: grid;
+      grid-template-columns: 74px 1fr;
+      gap: 0;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--surface);
+      margin-bottom: 16px;
+      transition: border-color .25s, transform .25s, box-shadow .25s;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .03);
+    }
+
+    .engine:hover {
+      border-color: var(--line-strong);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .06)
+    }
+
+    .engine .rail {
+      background: var(--surface-2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 22px 0;
+      border-right: 1px solid var(--line);
+    }
+
+    .engine .rail .pr {
+      font-family: var(--mono);
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--orange);
+      line-height: 1
+    }
+
+    .engine .rail .lbl {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      letter-spacing: .12em;
+      color: var(--faint);
+      margin-top: 6px;
+      text-align: center
+    }
+
+    .engine .body {
+      padding: 22px 26px
+    }
+
+    .engine .body .top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 14px;
+      margin-bottom: 4px
+    }
+
+    .engine .body h3 {
+      font-size: 18px;
+      font-weight: 700
+    }
+
+    .engine .body .share {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--gel);
+      background: var(--gel-soft);
+      border: 1px solid rgba(14, 159, 94, .25);
+      border-radius: 999px;
+      padding: 3px 10px
+    }
+
+    .engine .body .role {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .06em;
+      color: var(--faint);
+      text-transform: uppercase
+    }
+
+    .engine .body .lede {
+      font-size: 13.5px;
+      color: var(--muted);
+      margin: 6px 0 14px
+    }
+
+    .tactics {
+      list-style: none;
+      display: grid;
+      gap: 8px
+    }
+
+    .tactics li {
+      font-size: 13px;
+      color: var(--ink);
+      position: relative;
+      padding-left: 20px;
+      line-height: 1.55
+    }
+
+    .tactics li::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--orange);
+      font-size: 11px;
+      top: 3px
+    }
+
+    .tactics li .m {
+      color: var(--muted)
+    }
+
+    .tmpl {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px
+    }
+
+    .tmpl span {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 5px 9px
+    }
+
+    /* ACCEL (paid acceleration, compliant) */
+    .accel {
+      margin-top: 8px;
+      border: 1px solid rgba(14, 159, 94, .28);
+      background: linear-gradient(180deg, var(--gel-soft), rgba(226, 243, 234, .25));
+      border-radius: 16px;
+      padding: 26px 28px;
+    }
+
+    .accel .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .2em;
+      color: var(--gel);
+      font-weight: 600;
+      text-transform: uppercase
+    }
+
+    .accel h3 {
+      font-size: 19px;
+      font-weight: 700;
+      margin: 10px 0 6px
+    }
+
+    .accel .intro {
+      font-size: 13.5px;
+      color: var(--muted);
+      margin-bottom: 20px;
+      max-width: 720px
+    }
+
+    .accel .intro b {
+      color: var(--ink);
+      font-weight: 500
+    }
+
+    .a-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px
+    }
+
+    .a-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px 20px
+    }
+
+    .a-card .ah {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 10px
+    }
+
+    .a-card .num {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gel);
+      background: var(--gel-soft);
+      border-radius: 6px;
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center
+    }
+
+    .a-card h4 {
+      font-size: 15px;
+      font-weight: 700
+    }
+
+    .a-card ul {
+      list-style: none;
+      display: grid;
+      gap: 7px
+    }
+
+    .a-card li {
+      font-size: 12.5px;
+      color: var(--muted);
+      padding-left: 16px;
+      position: relative;
+      line-height: 1.55
+    }
+
+    .a-card li::before {
+      content: "+";
+      position: absolute;
+      left: 0;
+      color: var(--gel);
+      font-weight: 700
+    }
+
+    .a-card li b {
+      color: var(--ink);
+      font-weight: 500
+    }
+
+    .a-foot {
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--faint);
+      font-family: var(--mono);
+      letter-spacing: .02em;
+      line-height: 1.6
+    }
+
+    /* TIMELINE */
+    .tl {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 6px
+    }
+
+    .tl-col {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px 18px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .03)
+    }
+
+    .tl-col .wk {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .1em;
+      color: var(--gel);
+      font-weight: 600
+    }
+
+    .tl-col h4 {
+      font-size: 14.5px;
+      font-weight: 700;
+      margin: 8px 0 10px
+    }
+
+    .tl-col ul {
+      list-style: none;
+      display: grid;
+      gap: 7px
+    }
+
+    .tl-col li {
+      font-size: 12px;
+      color: var(--muted);
+      padding-left: 14px;
+      position: relative;
+      line-height: 1.5
+    }
+
+    .tl-col li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 7px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--orange)
+    }
+
+    /* KPI */
+    .kpi {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px
+    }
+
+    .kpi-card {
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 20px;
+      background: var(--surface);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .03)
+    }
+
+    .kpi-card .cat {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 12px
+    }
+
+    .kpi-card ul {
+      list-style: none;
+      display: grid;
+      gap: 6px
+    }
+
+    .kpi-card li {
+      font-size: 12.5px;
+      color: var(--muted);
+      padding-left: 14px;
+      position: relative
+    }
+
+    .kpi-card li::before {
+      content: "·";
+      position: absolute;
+      left: 2px;
+      color: var(--gel);
+      font-weight: 700
+    }
+
+    /* FOOT */
+    .foot {
+      margin: 70px 0 60px;
+      padding: 30px 0 0;
+      border-top: 1px solid var(--line)
+    }
+
+    .foot .big {
+      font-size: clamp(17px, 2.6vw, 22px);
+      font-weight: 700;
+      line-height: 1.55
+    }
+
+    .foot .big .hl {
+      color: var(--orange)
+    }
+
+    .foot .note {
+      font-size: 12.5px;
+      color: var(--faint);
+      margin-top: 18px;
+      font-family: var(--mono);
+      letter-spacing: .03em
+    }
+
+    .rv {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .7s ease, transform .7s ease
+    }
+
+    .rv.in {
+      opacity: 1;
+      transform: none
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      .rv {
+        opacity: 1;
+        transform: none;
+        transition: none
+      }
+    }
+
+    @media(max-width:860px) {
+
+      .loop,
+      .tl {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .stage::after {
+        display: none
+      }
+
+      .kpi {
+        grid-template-columns: 1fr
+      }
+
+      .c-grid,
+      .a-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    @media(max-width:560px) {
+
+      .loop,
+      .tl {
+        grid-template-columns: 1fr
+      }
+
+      .engine {
+        grid-template-columns: 1fr
+      }
+
+      .engine .rail {
+        flex-direction: row;
+        gap: 12px;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+        padding: 14px 18px;
+        justify-content: flex-start
+      }
+
+      .wrap {
+        padding: 0 20px
+      }
+
+      .hero {
+        padding: 64px 0 44px
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="wrap">
+      <div class="eyebrow">Traffic Playbook · 对标 theluckylk.com</div>
+      <h1>流量不是<span class="hl">买</span>来的,<br>是内容<span class="hl">换</span>来的。</h1>
+      <p class="sub">这个品类的付费广告路被堵死了。能跑通的只有一条:<b>短视频海量种草 → 品牌搜索与直接访问 → 商品页承接 → 联盟与积分放大</b>,转一圈,再把利润喂回内容。下面是这台飞轮的拆解。</p>
+      <div class="meta-row">
+        <span class="chip">类目 · <b>Gel Blaster</b></span>
+        <span class="chip">平台 · <b>Shopify</b></span>
+        <span class="chip">第一引擎 · <b>短视频 60%+</b></span>
+        <span class="chip">对标月访问 · <b>~129.5K</b></span>
+        <span class="chip">付费广告 · <b>仅合规窄门</b></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- LOOP -->
+  <section class="loop-sec wrap rv">
+    <div class="loop-title">— The Content Flywheel · 内容飞轮 —</div>
+    <div class="loop">
+      <div class="stage">
+        <div class="n">01</div>
+        <h4>内容种草</h4>
+        <p>YouTube + TikTok 海量短视频,把冲动种进用户脑子里</p>
+      </div>
+      <div class="stage">
+        <div class="n">02</div>
+        <h4>品牌搜索 / 直达</h4>
+        <p>用户搜你的品牌名或直接输域名进站,Direct 占比最大</p>
+      </div>
+      <div class="stage">
+        <div class="n">03</div>
+        <h4>商品页承接</h4>
+        <p>视频+规格+合规+真实评价,把意向转成订单</p>
+      </div>
+      <div class="stage">
+        <div class="n">04</div>
+        <h4>联盟 · 积分放大</h4>
+        <p>分销裂变 + 复购留存,利润再投回内容产能</p>
+      </div>
+    </div>
+    <div class="loop-foot">对标站验证:Direct <b>41.6%</b> 居首 · 搜索词几乎全是品牌词 — 证明流量先在视频里被种下,再回站点成交。</div>
+  </section>
+
+
+
+  <!-- ENGINES -->
+  <section class="sec wrap">
+    <div class="sec-head rv"><span class="k">§ ENGINES</span>
+      <h2>六大流量引擎(按优先级)</h2>
+    </div>
+    <p class="sec-desc rv">把资源按这个顺序投:越靠前越是增长主力,越靠后越是留存与抗风险层。预算的大头是"内容产能"和"达人关系",不是广告费。</p>
+
+    <div class="engine rv">
+      <div class="rail">
+        <div class="pr">1</div>
+        <div class="lbl">PRIMARY</div>
+      </div>
+      <div class="body">
+        <div class="top">
+          <h3>短视频:YouTube + TikTok 双轨</h3><span class="share">≈ 60%+</span><span class="role">第一引擎</span>
+        </div>
+        <p class="lede">对标站真正的主阵地是 YouTube(主频道约 730 万订阅 + 副频道 174 万),TikTok 矩阵配合。这是唯一被验证能起盘的渠道。</p>
+        <ul class="tactics">
+          <li>账号结构:YouTube 主号+垂直副号;TikTok 主号 + 2–3 垂直小号 + <span class="m">备用号(封号容灾,对标站自己就有 new account)</span></li>
+          <li>节奏:每周 5–7 条 Shorts/TikTok/Reels + 2 条 YouTube 长视频;每号日更 1–2 条</li>
+          <li>不只"开枪演示":对比、拆箱、实测、故障排查、安全玩法、配件升级、后院/战术游戏</li>
+          <li>合规:不指向真人射击,突出玩具属性,<span class="m">橙色枪口入镜是保护不是缺点</span></li>
+        </ul>
+        <div class="tmpl">
+          <span>$79 vs $199 gel blaster</span><span>Top 5 beginner blasters</span><span>M4A1 range test</span>
+          <span>Why your blaster jams</span><span>Accessories under $30</span><span>Shipping &amp; customs
+            explained</span><span>"Who needs this?" 互动钩子</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="engine rv">
+      <div class="rail">
+        <div class="pr">2</div>
+        <div class="lbl">SEARCH</div>
+      </div>
+      <div class="body">
+        <div class="top">
+          <h3>品牌搜索</h3><span class="role">第二引擎 · 最被低估</span>
+        </div>
+        <p class="lede">对标站 Direct 41.6% + 搜索词全是品牌词 —— 视频先种草,用户再搜品牌名回站。这条要从第一天就铺。</p>
+        <ul class="tactics">
+          <li>每条视频固定口播/字幕引导:<span class="m">"Search [品牌名] gel blaster"</span></li>
+          <li>品牌名统一出现在水印、包装、贴纸、优惠码 <span class="m">(优惠码本身就是品牌广告)</span></li>
+          <li>第一天占住全平台 handle 与品牌词域名,防截流</li>
+          <li>用 GSC 监控品牌词展示量,当作"内容种草效果"的代理指标</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="engine rv">
+      <div class="rail">
+        <div class="pr">3</div>
+        <div class="lbl">MOAT</div>
+      </div>
+      <div class="body">
+        <div class="top">
+          <h3>SEO 内容中心</h3><span class="role">第三引擎 · 中长期护城河</span>
+        </div>
+        <p class="lede">对标站博客几乎空白 —— 这是你最大的差异化空间。做关键词集群,不要只堆商品页。</p>
+        <ul class="tactics">
+          <li><b>购买型</b> <span class="m">best gel blaster / gel blaster pistol / m4 gel blaster</span></li>
+          <li><b>对比型</b> <span class="m">gel blaster vs airsoft / best for beginners</span></li>
+          <li><b>问题型</b> <span class="m">why not shooting / gel balls left in magazine / how long soak</span></li>
+          <li><b>合规型</b> <span class="m">are gel blasters legal in [state] / orange tip requirement</span></li>
+          <li>落地形式:博客 + Top 10 排行页 + Beginner Kit 套装页 + Shipping to [Country] 国家页</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="engine rv">
+      <div class="rail">
+        <div class="pr">4</div>
+        <div class="lbl">AMPLIFY</div>
+      </div>
+      <div class="body">
+        <div class="top">
+          <h3>创作者联盟</h3><span class="role">第四引擎 · 最快放大器</span>
+        </div>
+        <p class="lede">用 GoAffPro / Refersion 建分销。这是把内容杠杆放大、又能加速冷启动的最快方式。</p>
+        <ul class="tactics">
+          <li>佣金 10–20% + 独立折扣码 + 专属落地页 + 免费样品</li>
+          <li>优先 5K–200K 粉的<b>中腰部</b>博主 <span class="m">(性价比最高,别一上来砸大网红)</span></li>
+          <li>出单博主加码复投,建联盟排行榜激励</li>
+          <li>FTC 披露条款写进合作规范 <span class="m">(既避险,又强化"合规可信"定位)</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="engine rv">
+      <div class="rail">
+        <div class="pr">5</div>
+        <div class="lbl">TRUST</div>
+      </div>
+      <div class="body">
+        <div class="top">
+          <h3>社区</h3><span class="role">第五引擎 · 低成本高意向</span>
+        </div>
+        <p class="lede">Reddit / Discord / FB Groups / 论坛意向度极高,但要耐心,绝不能硬广。该品类天然被质疑 scam,正好用透明度反打。</p>
+        <ul class="tactics">
+          <li>以玩家身份做真实测评、故障解答、配件教程,签名带站点</li>
+          <li>自建 Discord <span class="m">(对标站没做)</span>:新品内测、抽奖、约战 → 差异化 + 抗封号私域</li>
+          <li>包裹插卡:教程二维码 + Discord 邀请 + 联盟招募 + 合规好评引导</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="engine rv">
+      <div class="rail">
+        <div class="pr">6</div>
+        <div class="lbl">RETAIN</div>
+      </div>
+      <div class="body">
+        <div class="top">
+          <h3>邮件 / SMS 复购</h3><span class="role">第六引擎 · 承接复购</span>
+        </div>
+        <p class="lede">核心利润不在第一把枪,在弹药/电池/配件的复购。用 Klaviyo 建五条自动流把它接住。</p>
+        <ul class="tactics">
+          <li>新用户订阅 10% coupon · 浏览未购提醒 · 加购未付款挽回 <span class="m">(高客单 ROI 最高的一条)</span></li>
+          <li>收货后:使用教程 + 安全提示 → 降差评、提评价质量</li>
+          <li>30–45 天后:弹药/电池/配件复购提醒,耗材订阅化</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACCELERATION (compliant paid) -->
+  <section class="sec wrap">
+    <div class="sec-head rv"><span class="k">§ ACCELERATE</span>
+      <h2>想更快?四条合规提速通道</h2>
+    </div>
+    <p class="sec-desc rv">自然流量慢是真焦虑,但解法不是赌上账户去钻审核空子。下面四条都是"花钱买速度"且不会让你一夜归零的路径 —— 本质是买内容产能和分发,不是买被禁的曝光。</p>
+    <div class="accel rv">
+      <div class="tag">✓ 合规加速 · 不赌地基</div>
+      <h3>把预算花在"换速度"而不是"钻空子"上</h3>
+      <p class="intro">核心原则:<b>付费用来放大已被验证的内容和关系,不用来绕过平台政策。</b>每一条都能压缩起量时间,且失败上限只是"这笔钱效率低",而不是"店没了"。</p>
+      <div class="a-grid">
+        <div class="a-card">
+          <div class="ah"><span class="num">1</span>
+            <h4>达人定制内容付费</h4>
+          </div>
+          <ul>
+            <li>不止寄样,直接<b>付费买中腰部博主的定制视频</b>,锁定发布时间与脚本</li>
+            <li>优先已自然出过单的博主<b>加价复投</b>,把验证过的内容放大</li>
+            <li>拿到授权后可<b>二次剪辑分发</b>到自己矩阵号,一鱼多吃</li>
+            <li>本质:买的是内容产能和确定性,不是被禁的广告位</li>
+          </ul>
+        </div>
+        <div class="a-card">
+          <div class="ah"><span class="num">2</span>
+            <h4>Meta 亮色合规款窄门</h4>
+          </div>
+          <ul>
+            <li>只选<b>亮色/透明/橙口明显</b>、明确以玩具呈现的 SKU</li>
+            <li>素材禁区:不出现深色逼真枪体、不指人射击、文案突出 toy/合规标识</li>
+            <li>严格 <b>18+ 定向</b>,用独立广告资产做风险隔离,别污染主 BM</li>
+            <li>预设"随时可能拒登"的心态做小额测试,跑通再缓慢放量</li>
+          </ul>
+        </div>
+        <div class="a-card">
+          <div class="ah"><span class="num">3</span>
+            <h4>Google 上的安全配件引流</h4>
+          </div>
+          <ul>
+            <li>用<b>不发射弹丸的安全 SKU</b>(护目镜、靶子、收纳箱、弹珠)做可投放落地页</li>
+            <li>把进站流量用站内推荐与捆绑<b>导向主力枪体</b></li>
+            <li>同时吃这些配件词的 SEO,付费+自然双跑</li>
+            <li>引流效率有限,定位为"补充入口"而非主渠道</li>
+          </ul>
+        </div>
+        <div class="a-card">
+          <div class="ah"><span class="num">4</span>
+            <h4>原生赞助 · 社区付费位</h4>
+          </div>
+          <ul>
+            <li>赞助 gel blaster / airsoft 垂类 <b>YouTube 频道或 Discord 社区</b></li>
+            <li>玩家社群高度重叠,转化意向远高于泛投广告</li>
+            <li>赞助内容天然带 FTC 披露,合规且可信</li>
+            <li>可与联盟打通:赞助博主同时给联盟码,效果可归因</li>
+          </ul>
+        </div>
+      </div>
+      <p class="a-foot">注:斗篷 / cloaking 不在此列 — 它是平台明令禁止的规避审核行为,触发的是账户与域名层级的连带封禁,与"更可信版 LKCJ"的定位直接冲突,不作为方案。</p>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="sec wrap">
+    <div class="sec-head rv"><span class="k">§ 90 DAYS</span>
+      <h2>冷启动节奏</h2>
+    </div>
+    <p class="sec-desc rv">前 90 天的任务是:把飞轮转起来,跑出 1–2 个爆款 SKU 和一套可复制的素材模板。</p>
+    <div class="tl">
+      <div class="tl-col rv">
+        <div class="wk">WEEK 1–2</div>
+        <h4>地基</h4>
+        <ul>
+          <li>确定合规可售 SKU,拿供应商证书</li>
+          <li>注册品牌 / 域名 / 全套社媒 handle</li>
+          <li>支付报备,定发货国家白名单</li>
+        </ul>
+      </div>
+      <div class="tl-col rv">
+        <div class="wk">WEEK 3–4</div>
+        <h4>弹药库</h4>
+        <ul>
+          <li>上线 20–30 SKU(5 爆品+10 配件+5 耗材)</li>
+          <li>每爆品配 1 长视频 + 3 短视频 + 8 图</li>
+          <li>上线信任页全套</li>
+        </ul>
+      </div>
+      <div class="tl-col rv">
+        <div class="wk">MONTH 2</div>
+        <h4>放量</h4>
+        <ul>
+          <li>每天发短视频(多号矩阵)</li>
+          <li>触达 20–50 个中腰部博主寄样/定制</li>
+          <li>发 20 篇 SEO 文章 + Klaviyo 五流上线</li>
+        </ul>
+      </div>
+      <div class="tl-col rv">
+        <div class="wk">MONTH 3</div>
+        <h4>聚焦</h4>
+        <ul>
+          <li>砍低转化 SKU,集中推 3 爆品</li>
+          <li>爆品备美国海外仓 → 时效压到 3–7 天</li>
+          <li>上排行/套装/国家页,启动多语言</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- KPI -->
+  <section class="sec wrap">
+    <div class="sec-head rv"><span class="k">§ METRICS</span>
+      <h2>前 90 天看什么</h2>
+    </div>
+    <p class="sec-desc rv">别只盯销售额。这个阶段真正决定生死的是内容留存率、品牌词增长和售后口碑。</p>
+    <div class="kpi">
+      <div class="kpi-card rv">
+        <div class="cat">视频</div>
+        <ul>
+          <li>每周发布量</li>
+          <li>3 秒留存 / 完播率</li>
+          <li>主页点击率 / 爆款率</li>
+        </ul>
+      </div>
+      <div class="kpi-card rv">
+        <div class="cat">品牌 &amp; SEO</div>
+        <ul>
+          <li>GSC 品牌词展示量(种草代理指标)</li>
+          <li>Direct 占比</li>
+          <li>长尾词排名 / 博客→商品页点击</li>
+        </ul>
+      </div>
+      <div class="kpi-card rv">
+        <div class="cat">网站转化</div>
+        <ul>
+          <li>CVR / AOV / 加购率</li>
+          <li>结账放弃率</li>
+          <li>商品页停留时长</li>
+        </ul>
+      </div>
+      <div class="kpi-card rv">
+        <div class="cat">联盟 &amp; 付费</div>
+        <ul>
+          <li>单创作者 CPA / GMV</li>
+          <li>退款率 / 复投率</li>
+          <li>合规广告测试 CAC</li>
+        </ul>
+      </div>
+      <div class="kpi-card rv">
+        <div class="cat">售后口碑</div>
+        <ul>
+          <li>妥投时效 / 客服首响</li>
+          <li>退款率 / 差评归因</li>
+          <li>Trustpilot 分数(对标站仅 2.9)</li>
+        </ul>
+      </div>
+      <div class="kpi-card rv">
+        <div class="cat">风险</div>
+        <ul>
+          <li>社媒账号状态(封号预警)</li>
+          <li>支付纠纷率</li>
+          <li>素材云备份完整度</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOT -->
+  <footer class="foot wrap rv">
+    <p class="big">对标站赢在<span class="hl">流量体量</span>,命门在<span class="hl">信任与物流</span>。<br>复制它的内容飞轮,反打它的短板 — 做"更可信版的它"。
+    </p>
+    <p class="note">Gel Blaster 独立站流量方案 · 基于 theluckylk.com / LKCJ 全方位调研 · 仅含流量获取部分</p>
+  </footer>
+
+  <script>
+    const io = new IntersectionObserver((es) => {
+      es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: .12 });
+    document.querySelectorAll('.rv').forEach((el, i) => {
+      el.style.transitionDelay = (Math.min(i % 4, 3) * 60) + 'ms';
+      io.observe(el);
+    });
+  </script>
+</body>
+
+</html>

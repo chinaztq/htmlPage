@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="light" />
+<title>Gojersey.co 网站优化实施计划｜研发执行版</title>
+<style>
+  :root{
+    --navy:#0B2545;
+    --navy-2:#071A33;
+    --blue:#0B5FA5;
+    --blue-2:#073E6E;
+    --gold:#A9862F;
+    --ink:#152230;
+    --muted:#657381;
+    --line:#D9E0E6;
+    --line-2:#E9EDF1;
+    --paper:#FFFFFF;
+    --wash:#F4F6F8;
+    --wash-2:#EDF1F4;
+    --green:#2F6B3A;
+    --green-bg:#EAF3EA;
+    --amber:#8B5A08;
+    --amber-bg:#FCF3E3;
+    --red:#9A2D2D;
+    --red-bg:#FBEAEA;
+    --shadow:0 16px 46px rgba(9,30,58,.08);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;overflow-x:hidden}
+  body{
+    margin:0;
+    color:var(--ink);
+    background:#E8EDF1;
+    font-family:Inter,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
+    line-height:1.72;
+    -webkit-font-smoothing:antialiased;
+    overflow-wrap:anywhere;
+  }
+  a{color:var(--blue);text-decoration:none}
+  a:hover{color:var(--blue-2)}
+  .cover{
+    color:white;
+    background:
+      radial-gradient(circle at 92% 12%, rgba(255,255,255,.09), transparent 22%),
+      linear-gradient(135deg,var(--navy-2),var(--navy));
+    position:relative;
+    overflow:hidden;
+  }
+  .cover:after{
+    content:"";
+    display:block;
+    height:7px;
+    background:linear-gradient(90deg,var(--blue) 0 76px,var(--gold) 76px 98px,transparent 98px);
+  }
+  .cover-inner{max-width:1320px;margin:auto;padding:64px 56px 44px}
+  .brand-row{display:flex;align-items:center;gap:15px;margin-bottom:42px}
+  .brand-mark{
+    width:38px;height:38px;border:1.5px solid #8298AE;
+    display:grid;place-items:center;font-weight:800;font-size:12px;letter-spacing:.08em;
+    color:#D7E1EA
+  }
+  .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#A9BBCB;font-weight:700}
+  .cover h1{
+    font-family:Georgia,"Noto Serif SC","Songti SC",serif;
+    font-size:46px;line-height:1.23;margin:0 0 14px;max-width:870px;letter-spacing:-.02em
+  }
+  .cover-sub{font-size:17px;color:#C2CFDB;max-width:900px;margin:0 0 34px}
+  .meta{display:flex;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.16);padding-top:21px;font-size:13px;color:#C9D5E0}
+  .meta span{padding-right:27px;margin-right:27px;border-right:1px solid rgba(255,255,255,.16)}
+  .meta span:last-child{border-right:0}
+  .meta b{color:#839AAF;font-weight:500;margin-right:7px}
+  .headline-strip{background:var(--navy-2)}
+  .headline-inner{max-width:1320px;margin:auto;padding:27px 56px;display:grid;grid-template-columns:150px 1fr;gap:28px;align-items:center}
+  .headline-score{font-size:48px;font-weight:800;color:#fff;line-height:1}
+  .headline-score small{font-size:18px;color:#7890A6;font-weight:600}
+  .headline-copy{color:#AABCCD;font-size:14px;max-width:950px}
+
+  .page{max-width:1320px;margin:0 auto;display:flex;align-items:flex-start;background:var(--paper);box-shadow:var(--shadow);min-height:100vh}
+  .sidebar{
+    position:sticky;top:0;width:286px;flex:0 0 286px;height:100vh;overflow:auto;
+    background:#FAFBFC;border-right:1px solid var(--line);padding:32px 22px 40px 30px;
+  }
+  .sidebar::-webkit-scrollbar{width:5px}.sidebar::-webkit-scrollbar-thumb{background:#BFC8D0;border-radius:5px}
+  .toc-title{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#7C8995;border-bottom:2px solid var(--navy);padding-bottom:13px;margin-bottom:14px}
+  .toc{list-style:none;margin:0;padding:0}
+  .toc li{margin:1px 0}
+  .toc a{display:block;padding:8px 10px;border-left:2px solid transparent;color:#4E5D6A;font-size:13px;line-height:1.42;transition:.15s}
+  .toc a:hover{background:var(--wash-2);color:var(--navy);border-left-color:#A9B6C1}
+  .toc a.active{font-weight:800;background:#E7EDF2;color:var(--navy);border-left-color:var(--blue)}
+  .toc a.sub{padding-left:24px;font-size:12px;color:#74818D}
+  .toc-foot{font-size:11px;color:#8A96A1;border-top:1px solid var(--line);margin-top:18px;padding-top:15px}
+  .mobile-toc{display:none;width:100%;border:0;background:white;border-bottom:1px solid var(--line);padding:15px 6vw;font-weight:800;color:var(--navy);letter-spacing:.08em;text-transform:uppercase;justify-content:space-between;align-items:center}
+  .mobile-toc .arrow{transition:.2s}.mobile-toc.open .arrow{transform:rotate(180deg)}
+
+  main{min-width:0;flex:1;background:white}
+  .content{max-width:970px;margin:auto;padding:54px 58px 110px}
+  .section-kicker{font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:#76838F;font-weight:800;border-bottom:1px solid var(--line-2);padding-bottom:16px;margin-bottom:28px}
+  h2{
+    font-family:Georgia,"Noto Serif SC","Songti SC",serif;
+    color:var(--navy);font-size:27px;line-height:1.35;margin:68px 0 14px;padding-top:21px;border-top:3px solid var(--navy);scroll-margin-top:20px
+  }
+  h2:first-of-type{margin-top:0}
+  h3{font-size:18px;color:var(--navy);margin:34px 0 14px;border-left:4px solid var(--blue);padding-left:13px;scroll-margin-top:20px}
+  h4{font-size:14px;color:var(--blue-2);margin:25px 0 10px;text-transform:uppercase;letter-spacing:.05em}
+  p{margin:0 0 15px}
+  strong{color:var(--navy)}
+  ul,ol{margin:0 0 20px;padding-left:22px}
+  li{margin-bottom:8px}
+  li::marker{color:var(--blue);font-weight:800}
+  .lead{font-family:Georgia,"Noto Serif SC","Songti SC",serif;font-size:19px;line-height:1.8;color:#2B3B49;margin-bottom:28px}
+  .callout{background:var(--wash);border-left:4px solid var(--gold);padding:17px 21px;margin:20px 0 24px;color:#3B4A57}
+  .callout.blue{border-left-color:var(--blue);background:#EEF4F9}
+  .callout.red{border-left-color:var(--red);background:var(--red-bg)}
+  .callout.green{border-left-color:var(--green);background:var(--green-bg)}
+  .metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0 30px}
+  .metric{border:1px solid var(--line);background:white;padding:18px 16px;min-height:122px}
+  .metric .num{font-size:28px;font-weight:800;color:var(--navy);line-height:1.2}
+  .metric .label{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:#7C8994;margin-top:7px;font-weight:700}
+  .metric .desc{font-size:12.5px;color:#61707D;margin-top:7px}
+  .priority-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0 28px}
+  .priority-card{border:1px solid var(--line);padding:18px;background:white}
+  .priority-card .tag{display:inline-block;font-size:11px;font-weight:800;padding:3px 8px;margin-bottom:10px;letter-spacing:.08em}
+  .p0{background:var(--red-bg);color:var(--red)}.p1{background:var(--amber-bg);color:var(--amber)}.p2{background:#EAF1F8;color:var(--blue-2)}
+  .priority-card b{display:block;color:var(--navy);margin-bottom:6px}.priority-card p{font-size:13px;color:#596875;margin:0}
+
+  .table-wrap{overflow:auto;border:1px solid var(--line);margin:16px 0 27px;background:white}
+  table{border-collapse:collapse;width:100%;min-width:690px;font-size:13px}
+  th{background:var(--navy);color:white;text-align:left;padding:12px 14px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid var(--blue)}
+  td{padding:12px 14px;border-top:1px solid var(--line-2);vertical-align:top;color:#42515E}
+  tr:nth-child(even) td{background:#F8FAFB}
+  tr:hover td{background:#EEF4F8}
+  .status{display:inline-block;padding:3px 8px;font-size:11px;font-weight:800;white-space:nowrap}
+  .status.red{background:var(--red-bg);color:var(--red)}
+  .status.amber{background:var(--amber-bg);color:var(--amber)}
+  .status.green{background:var(--green-bg);color:var(--green)}
+  .status.blue{background:#EAF1F8;color:var(--blue-2)}
+  pre{background:var(--navy-2);color:#D8E2EA;padding:20px 22px;overflow:auto;font:13px/1.65 "SFMono-Regular",Consolas,monospace;margin:15px 0 24px;white-space:pre-wrap}
+  code{font-family:"SFMono-Regular",Consolas,monospace;background:#EEF1F4;border:1px solid #D6DEE5;color:var(--blue-2);padding:2px 5px;font-size:.88em}
+  pre code{background:transparent;border:0;color:inherit;padding:0}
+  .timeline{position:relative;margin:25px 0 34px;padding-left:28px}
+  .timeline:before{content:"";position:absolute;left:7px;top:4px;bottom:4px;width:2px;background:#CCD5DD}
+  .timeline-item{position:relative;margin-bottom:24px;padding:0 0 0 16px}
+  .timeline-item:before{content:"";position:absolute;left:-27px;top:5px;width:12px;height:12px;border-radius:50%;background:var(--blue);border:3px solid #DFEAF3}
+  .timeline-item .week{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:#788590;font-weight:800}
+  .timeline-item h4{margin:3px 0 7px;color:var(--navy);font-size:15px;letter-spacing:0;text-transform:none}
+  .timeline-item p{font-size:13.5px;color:#566572;margin:0}
+  .ownership{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:18px 0 28px}
+  .owner{border-top:3px solid var(--navy);background:var(--wash);padding:16px}
+  .owner b{display:block;margin-bottom:5px}.owner span{font-size:13px;color:#61707C}
+  .checklist{counter-reset:item;list-style:none;padding:0;margin:18px 0 30px}
+  .checklist li{counter-increment:item;position:relative;padding:13px 14px 13px 48px;border-bottom:1px solid var(--line-2);margin:0}
+  .checklist li:before{content:counter(item,decimal-leading-zero);position:absolute;left:8px;top:13px;font-weight:800;color:var(--blue);font-size:12px}
+  .footer{border-top:3px solid var(--navy);margin-top:66px;padding-top:22px;text-align:center;color:#84909B;font-size:12px}
+  .note{font-size:12px;color:#74818C}
+  .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin:13px 0 23px}
+  .pill{font-size:12px;background:var(--wash-2);border:1px solid #D8E0E6;padding:5px 9px;color:#4B5A67}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+
+  @media(max-width:1100px){
+    .cover-inner,.headline-inner{padding-left:6vw;padding-right:6vw}
+    .page{display:block}
+    .mobile-toc{display:flex;position:sticky;top:0;z-index:30}
+    .sidebar{position:static;width:auto;height:auto;max-height:0;overflow:hidden;padding:0;border-right:0;transition:max-height .25s ease}
+    .sidebar.open{max-height:1500px;padding:18px 6vw 28px;border-bottom:1px solid var(--line)}
+    .toc-title,.toc-foot{display:none}
+    .content{max-width:none;padding-left:6vw;padding-right:6vw}
+  }
+  @media(max-width:760px){
+    .cover h1{font-size:31px}.cover-inner{padding-top:44px}.cover-sub{font-size:15px}
+    .meta{display:block}.meta span{display:block;border:0;margin:6px 0;padding:0}
+    .headline-inner{grid-template-columns:1fr}.headline-score{font-size:39px}
+    .content{padding-top:36px;padding-bottom:76px}
+    h2{font-size:22px;margin-top:50px}.lead{font-size:17px}
+    .metric-grid,.priority-grid,.ownership,.two-col{grid-template-columns:1fr}
+    table{font-size:12px}
+  }
+  @media print{
+    body{background:white}.cover,.headline-strip,th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .page{box-shadow:none;max-width:none}.sidebar,.mobile-toc{display:none!important}
+    .content{max-width:none;padding:30px 34px}.cover-inner,.headline-inner{max-width:none}
+    h2,h3{break-after:avoid}table,.callout,.metric,.priority-card{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<header class="cover">
+  <div class="cover-inner">
+    <div class="brand-row"><div class="brand-mark">GJ</div><div class="eyebrow">Digital Commerce Transformation · Confidential</div></div>
+    <h1>Gojersey.co<br>网站优化实施计划</h1>
+    <p class="cover-sub">研发执行版｜覆盖网站性能、技术SEO与GEO、下单流程、移动端体验、数据监控与质量保障</p>
+    <div class="meta">
+      <span><b>依据</b>Gojersey.co 网站诊断报告</span>
+      <span><b>项目周期</b>12周集中优化 + 3个月持续监控</span>
+      <span><b>目标团队</b>产品 / 前端 / 后端 / 测试 / SEO / 设计 / 运营</span>
+    </div>
+  </div>
+</header>
+<section class="headline-strip">
+  <div class="headline-inner">
+    <div class="headline-score">68<small> / 100</small></div>
+    <div class="headline-copy">当前优先事项不是大规模视觉改版，而是先修复球队页面映射、软404、移动端交互、定制费用透明度、购物车推荐错误、SEO/GEO基础结构和后端响应速度，再逐步推进转化体验升级。</div>
+  </div>
+</section>
+
+<div class="page">
+  <button class="mobile-toc" id="mobileToc"><span>报告目录</span><span class="arrow">▼</span></button>
+  <aside class="sidebar" id="sidebar">
+    <div class="toc-title">Contents</div>
+    <ul class="toc" id="toc">
+      <li><a href="#summary">一、执行摘要</a></li>
+      <li><a href="#objectives">二、项目目标与原则</a></li>
+      <li><a href="#priorities">三、优先级与治理机制</a></li>
+      <li><a href="#roadmap">四、12周实施路线图</a></li>
+      <li><a href="#performance">五、网站性能优化</a></li>
+      <li><a href="#seo">六、SEO与GEO技术优化</a></li>
+      <li><a href="#checkout">七、下单流程优化</a></li>
+      <li><a href="#experience">八、网站体验优化</a></li>
+      <li><a href="#data">九、数据监控与实验</a></li>
+      <li><a href="#qa">十、测试与上线机制</a></li>
+      <li><a href="#ownership">十一、团队分工</a></li>
+      <li><a href="#acceptance">十二、验收指标</a></li>
+      <li><a href="#top20">十三、Top 20任务清单</a></li>
+      <li><a href="#deliverables" class="sub">→ 项目交付物</a></li>
+    </ul>
+    <div class="toc-foot">建议在桌面浏览器中查看；打印时将自动隐藏目录并优化分页。</div>
+  </aside>
+
+  <main>
+    <div class="content">
+      <div class="section-kicker">Gojersey.co · Website Optimization Program</div>
+
+      <section id="summary">
+        <h2>一、执行摘要</h2>
+        <p class="lead">本项目应采用“先止损、再提速、后增长”的顺序推进。第一阶段修复会直接浪费广告流量和订单的技术缺陷；第二阶段重构关键购买链路；第三阶段完善SEO/GEO、性能监控和持续实验体系。</p>
+        <div class="callout red"><strong>当前最高风险：</strong>球队URL与实际内容错位、无效ID返回200、商品定制费用展示不一致、移动端核心按钮触控区域过小、购物车推荐逻辑错误。这些问题会直接导致广告跳出、自然搜索稀释和订单流失。</div>
+
+        <div class="metric-grid">
+          <div class="metric"><div class="num">2.5s+</div><div class="label">当前TTFB</div><div class="desc">首字节时间偏慢，优先排查服务端渲染、数据库与缓存。</div></div>
+          <div class="metric"><div class="num">972KB</div><div class="label">首页HTML</div><div class="desc">初始HTML体积过大，应减少序列化数据与非首屏内容。</div></div>
+          <div class="metric"><div class="num">0</div><div class="label">首页H1/H2</div><div class="desc">页面语义层级缺失，搜索引擎难以理解页面主题。</div></div>
+          <div class="metric"><div class="num">12周</div><div class="label">集中实施周期</div><div class="desc">P0问题第一周完成，核心下单链路前四周完成。</div></div>
+        </div>
+
+        <h3>建议管理层确认的四项决策</h3>
+        <ol>
+          <li>第一周冻结非必要视觉需求，研发资源优先处理P0技术问题。</li>
+          <li>建立统一的URL、商品定制和订单状态数据模型，避免继续以页面补丁方式修复。</li>
+          <li>所有优化必须绑定基线数据、上线版本和验收指标，避免“上线即完成”。</li>
+          <li>对支付、订单、SEO路由和重定向修改实行双人评审与灰度发布。</li>
+        </ol>
+      </section>
+
+      <section id="objectives">
+        <h2>二、项目目标与原则</h2>
+        <h3>2.1 技术目标</h3>
+        <ul>
+          <li>球队、分类、商品页面URL与内容映射准确率达到100%。</li>
+          <li>无效球队、分类和商品ID返回真实404或410，不再静默跳转New Arrivals。</li>
+          <li>缓存命中情况下，首页及核心落地页TTFB控制在1秒以内。</li>
+          <li>核心页面P75指标：LCP ≤ 2.5秒、INP ≤ 200毫秒、CLS ≤ 0.1。</li>
+          <li>首页HTML第一阶段控制在500KB以内。</li>
+          <li>下单和支付接口具备幂等、防重复提交、异常恢复与可追踪日志。</li>
+        </ul>
+
+        <h3>2.2 SEO与GEO目标</h3>
+        <ul>
+          <li>首页、分类页、球队页和商品页建立规范的H1/H2层级。</li>
+          <li>Product、Offer、BreadcrumbList等结构化数据覆盖率达到95%以上。</li>
+          <li>Sitemap仅保留返回200的Canonical标准页。</li>
+          <li>建立语义化URL、301重定向、hreflang及多语言索引规则。</li>
+          <li>商品描述与分类介绍在服务端HTML中可抓取。</li>
+          <li>上线根目录<code>/llms.txt</code>，并为首页、分类、球队、商品、尺码、物流与退换货页面建立清晰、可引用的GEO内容结构。</li>
+          <li>建立品牌、商品、价格、库存、配送和退换货信息的一致性机制，减少AI搜索引用过期或冲突内容。</li>
+        </ul>
+
+        <h3>2.3 转化目标</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>指标</th><th>建议目标</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>商品页加购率</td><td>相对提升 ≥10%</td><td>通过移动端触控、尺码选择、定制费用和送达日期优化推动。</td></tr>
+            <tr><td>购物车进入结账率</td><td>相对提升 ≥10%</td><td>提前展示运费、税费、优惠和配送时间。</td></tr>
+            <tr><td>结账完成率</td><td>相对提升 ≥5%</td><td>优化表单、支付失败恢复和访客结账体验。</td></tr>
+            <tr><td>移动端表单错误率</td><td>下降 ≥30%</td><td>行内校验、自动聚焦和地址规则优化。</td></tr>
+            <tr><td>定制相关客服咨询</td><td>明显下降</td><td>统一展示定制价格、内容确认和退换货规则。</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="callout blue"><strong>实施原则：</strong>不以“功能上线”作为完成标准，而以“数据正确、流程可用、性能达标、异常可恢复、上线后指标可验证”作为验收标准。</div>
+      </section>
+
+      <section id="priorities">
+        <h2>三、优先级与治理机制</h2>
+        <div class="priority-grid">
+          <div class="priority-card"><span class="tag p0">P0 · 第一周</span><b>流量、订单与索引风险</b><p>URL映射、软404、支付重复、定制金额、购物车错误推荐。</p></div>
+          <div class="priority-card"><span class="tag p1">P1 · 第2—4周</span><b>核心转化链路</b><p>移动端触控、商品页定制、购物车、结账和支付恢复。</p></div>
+          <div class="priority-card"><span class="tag p2">P2 · 第5—12周</span><b>性能、SEO/GEO与增长</b><p>缓存、结构化数据、语义化URL、llms.txt、可引用内容组件和A/B测试。</p></div>
+        </div>
+
+        <h3>3.1 需求进入规则</h3>
+        <ul>
+          <li>P0修复期间，非关键视觉和活动需求原则上不插队。</li>
+          <li>涉及订单金额、库存、支付和SEO路由的需求必须有技术方案与回滚方案。</li>
+          <li>每个任务必须注明：问题、影响页面、负责人、上线版本、验收指标和监控方式。</li>
+          <li>同一问题优先在组件层或数据模型层解决，避免在不同页面重复打补丁。</li>
+        </ul>
+
+        <h3>3.2 发布机制</h3>
+        <pre><code>开发环境 → 自动测试 → 测试环境 → 产品/SEO/测试联合验收
+→ 5%灰度 → 25%灰度 → 100%发布 → 24小时重点监控 → 周度复盘</code></pre>
+      </section>
+
+      <section id="roadmap">
+        <h2>四、12周实施路线图</h2>
+        <div class="timeline">
+          <div class="timeline-item"><div class="week">第1—2天</div><h4>阶段0：建立基线与上线保障</h4><p>全站URL抓取、状态码检查、性能基线、下单漏斗、数据库备份、回滚流程和测试账号准备。</p></div>
+          <div class="timeline-item"><div class="week">第1周</div><h4>阶段1：修复P0技术问题</h4><p>球队URL映射、Slug校验、真实404、定制金额、购物车推荐、移动端触控区域和关键API异常。</p></div>
+          <div class="timeline-item"><div class="week">第2—4周</div><h4>阶段2：重构商品页与下单链路</h4><p>将原“购物车—地址物流选择—支付”三步流程改为“购物车—结账”两步；同步优化商品详情页信息顺序、购物车抽屉、费用透明度、单页结账、支付失败恢复与订单状态机。</p></div>
+          <div class="timeline-item"><div class="week">第5—7周</div><h4>阶段3：性能专项</h4><p>服务端缓存、数据库慢查询、HTML瘦身、JS/CSS拆分、图片策略、无限滚动和真实用户监控。</p></div>
+          <div class="timeline-item"><div class="week">第7—9周</div><h4>阶段4：SEO与GEO技术专项</h4><p>标题层级、Schema、Canonical、Sitemap、语义化URL、301、hreflang、llms.txt、实体一致性和各页面可引用内容组件。</p></div>
+          <div class="timeline-item"><div class="week">第10—12周</div><h4>阶段5：体验优化与实验</h4><p>首页结构、导航Mega Menu、商品卡片、搜索、筛选、信任元素及A/B测试。</p></div>
+          <div class="timeline-item"><div class="week">上线后3个月</div><h4>阶段6：持续监控</h4><p>周度性能与漏斗复盘、SEO索引与AI引用监测、支付异常分析、内容更新、实验迭代和缺陷清零。</p></div>
+        </div>
+      </section>
+
+      <section id="performance">
+        <h2>五、网站性能优化</h2>
+        <h3>5.1 后端与TTFB</h3>
+        <p>TTFB偏慢通常不是单一前端文件造成，应优先从服务端渲染、数据库、缓存和服务器区域定位。</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>检查项</th><th>研发动作</th><th>验收标准</th></tr></thead>
+          <tbody>
+            <tr><td>数据库慢查询</td><td>记录查询耗时；检查N+1；为team_id、category_id、slug、status、locale、inventory_status等字段补索引。</td><td>核心页面数据库查询P95下降，慢查询有可追踪日志。</td></tr>
+            <tr><td>服务端串行请求</td><td>首屏必要数据并行加载；评价、推荐、非首屏模块异步化。</td><td>首屏不再等待推荐和评价接口完成。</td></tr>
+            <tr><td>页面缓存</td><td>首页、球队、分类和商品主体使用CDN或边缘缓存；后台更新主动失效。</td><td>缓存命中TTFB ≤1秒；缓存更新不超过设定窗口。</td></tr>
+            <tr><td>地理距离</td><td>评估源站区域、CDN节点与主要市场网络延迟。</td><td>主要市场网络P75显著改善。</td></tr>
+          </tbody>
+        </table></div>
+
+        <h3>5.2 HTML体积</h3>
+        <ul>
+          <li>首屏HTML只返回当前视口和首屏交互必需的数据。</li>
+          <li>禁止把完整球队、商品、评价、多语言字典和推荐数据序列化进HTML。</li>
+          <li>非首屏模块滚动接近时再加载。</li>
+          <li>删除重复JSON、重复内联样式和开发环境调试数据。</li>
+          <li>第一阶段将首页HTML降到500KB以内，并持续追踪压缩后体积。</li>
+        </ul>
+
+        <h3>5.3 JavaScript与CSS</h3>
+        <div class="two-col">
+          <div class="callout blue"><strong>JavaScript</strong><br>按路由拆包；营销、客服、评论和推荐延迟加载；删除重复工具库；限制第三方脚本主线程占用；建立Bundle预算。</div>
+          <div class="callout blue"><strong>CSS</strong><br>提取Critical CSS；删除未使用样式；统一Button、Input、Card、Modal组件；避免加载当前路由不需要的主题文件。</div>
+        </div>
+
+        <h3>5.4 图片与列表</h3>
+        <ul>
+          <li>Hero图使用响应式尺寸，移动端不下载桌面超大图。</li>
+          <li>LCP图片设置高优先级，非首屏图片懒加载。</li>
+          <li>商品图固定宽高，降低CLS；评估AVIF与CDN动态裁切。</li>
+          <li>分类页每次加载24—40件商品，使用游标分页。</li>
+          <li>提供可抓取分页URL，并恢复浏览器返回后的滚动位置。</li>
+          <li>筛选或排序变化时取消旧请求，避免并发和界面闪烁。</li>
+        </ul>
+
+        <h3>5.5 API稳定性</h3>
+        <ul>
+          <li>GET请求设置超时，并对可安全重试的请求自动重试1—2次。</li>
+          <li>下单和支付POST请求使用幂等Key，禁止普通重复提交。</li>
+          <li>区分网络异常、服务器异常、库存不足和业务校验失败。</li>
+          <li>错误提示对用户可理解，后台保留错误码、订单号、接口和追踪ID。</li>
+          <li>接口失败率超过阈值时自动告警。</li>
+        </ul>
+      </section>
+
+      <section id="seo">
+        <h2>六、SEO与GEO技术优化</h2>
+        <h3>6.1 路由与软404</h3>
+        <pre><code>访问 /team/Liverpool/98
+1. 根据ID查询球队
+2. 查询标准Slug
+3. ID不存在：返回404
+4. ID存在、Slug错误：301到标准URL
+5. Slug与ID一致：返回200并展示对应球队内容</code></pre>
+        <p>严禁无效ID跳转到New Arrivals并返回200。该处理会制造软404和重复内容，稀释站点权重并浪费广告流量。</p>
+
+        <h3>6.2 URL规范</h3>
+        <div class="pill-row"><span class="pill">/team/real-madrid</span><span class="pill">/category/kids-soccer-jerseys</span><span class="pill">/category/retro-soccer-jerseys</span><span class="pill">/product/real-madrid-home-jersey-2026</span></div>
+        <p>现有带ID的URL可以阶段性保留，但必须校验Slug。对<code>/category/tag-428</code>等无语义URL，建立新URL、逐条301、更新站内链接和Sitemap，并保留重定向至少12个月。</p>
+
+        <h3>6.3 页面语义层级</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>页面</th><th>H1建议</th><th>H2示例</th></tr></thead>
+          <tbody>
+            <tr><td>首页</td><td>Soccer Jerseys Online – Club, National Team &amp; Custom Jerseys</td><td>World Cup 2026 Jerseys、Popular Club Jerseys、Custom Soccer Jerseys</td></tr>
+            <tr><td>球队页</td><td>Real Madrid Soccer Jerseys</td><td>Home、Away、Kids、Retro Jerseys</td></tr>
+            <tr><td>分类页</td><td>Kids Soccer Jerseys</td><td>Popular Teams、Size Guide、Customization</td></tr>
+            <tr><td>商品页</td><td>完整商品名称</td><td>Product Details、Size Guide、Reviews</td></tr>
+          </tbody>
+        </table></div>
+
+        <h3>6.4 结构化数据</h3>
+        <ul>
+          <li>商品页：Product、Offer、BreadcrumbList；评价真实可靠后再输出AggregateRating和Review。</li>
+          <li>分类和球队页：BreadcrumbList、ItemList。</li>
+          <li>首页：Organization、WebSite、SearchAction。</li>
+          <li>FAQ Schema只能对应页面上真实展示的FAQ。</li>
+          <li>结构化数据通过自动测试校验，避免价格、库存和页面显示不一致。</li>
+        </ul>
+
+        <h3>6.5 Canonical、Sitemap与多语言</h3>
+        <ul>
+          <li>Sitemap只包含200状态的标准URL；301、404和noindex页面不得进入。</li>
+          <li>筛选和排序参数不生成大量可索引重复页面。</li>
+          <li>Canonical指向当前语言和当前实体的标准URL。</li>
+          <li>多语言页面建立互相对应的hreflang和x-default。</li>
+          <li>商品删除后自动从Sitemap移除；有替代品则配置301，无替代则404或410。</li>
+        </ul>
+
+        <h3>6.6 服务端可抓取内容</h3>
+        <p>商品DESCRIPTION、CARE和SPECIFICATIONS应在首次HTML中输出，而不是仅依赖客户端异步请求。分类页增加150—250字真实介绍，放在商品列表下方并支持折叠。</p>
+
+        <h3>6.7 GEO优化定位与实施边界</h3>
+        <p>GEO（Generative Engine Optimization）的目标，是让Google AI功能、Microsoft Copilot及其他生成式搜索系统更容易找到、理解、核实并引用网站内容。其基础仍然是可索引的页面、清晰的文本、准确的结构化数据、良好的内部链接和可信的事实信息，不应被理解为单独堆叠“AI关键词”。</p>
+        <div class="callout blue"><strong>实施边界：</strong><code>llms.txt</code>目前应作为辅助发现与内容导航文件，不替代robots.txt、Sitemap、Canonical、hreflang或页面级结构化数据，也不保证任何AI系统一定抓取或引用。</div>
+        <ul>
+          <li>所有提供给AI系统的价格、库存、配送、退换货和定制规则，必须与用户页面及后台数据一致。</li>
+          <li>关键事实优先用清晰文本和表格呈现，不能只存在于图片、轮播图、弹窗或客户端脚本中。</li>
+          <li>页面先直接回答用户问题，再补充商品列表、品牌故事和营销内容。</li>
+          <li>禁止为了GEO批量生成重复、空洞或无法核实的球队历史、商品评价和FAQ。</li>
+          <li>避免使用无法证明的“official”“authentic”等表述；产品版本、授权关系和商品属性必须准确。</li>
+        </ul>
+
+        <h3>6.8 部署根目录 llms.txt</h3>
+        <p>在网站根目录提供<code>https://www.gojersey.co/llms.txt</code>，使用UTF-8纯文本和Markdown结构，返回200状态码，不经过登录、Cookie弹窗或多次重定向。文件由CMS配置生成，并由SEO/GEO负责人维护。</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>要求</th><th>实施说明</th><th>验收标准</th></tr></thead>
+          <tbody>
+            <tr><td>文件位置</td><td>固定为根目录<code>/llms.txt</code></td><td>直接访问返回200</td></tr>
+            <tr><td>格式</td><td>Markdown；一个H1站点名称、简短说明、H2分组和带描述的标准链接</td><td>UTF-8、无HTML模板和脚本</td></tr>
+            <tr><td>链接范围</td><td>只放Canonical、公开、长期有价值的首页、分类、球队、指南和政策页</td><td>不得包含404、301链、参数页或用户私有页面</td></tr>
+            <tr><td>更新方式</td><td>URL迁移、政策或重要分类变化时自动重新生成</td><td>每周自动检测失效链接，每月人工复核</td></tr>
+            <tr><td>安全边界</td><td>不得包含订单、客户、支付、后台、内部接口和未公开商业数据</td><td>安全扫描无敏感信息</td></tr>
+          </tbody>
+        </table></div>
+        <pre><code># Gojersey
+
+&gt; Gojersey is an online store for club, national team, retro, kids, women's and customizable soccer jerseys. Product pages and checkout are the source of truth for current price, stock, customization fees and delivery estimates.
+
+Important notes:
+- Product availability, price and shipping estimates may change.
+- Customized products may have different return conditions.
+- Do not infer official affiliation or licensing unless a page explicitly provides verifiable information.
+
+## Main Shopping Categories
+- [Club Soccer Jerseys](https://www.gojersey.co/team/Club-Soccer-Jerseys/92): Browse jerseys by football club.
+- [National Team Jerseys](https://www.gojersey.co/team/National-Soccer-Jerseys/93): Browse national team jerseys.
+- [Men's Soccer Apparel](https://www.gojersey.co/category/style-1): Men's jerseys, kits and training wear.
+- [Retro Jerseys](https://www.gojersey.co/category/category-1114): Retro-style football jerseys.
+- [Customizable Kits](https://www.gojersey.co/category/category-1132): Products supporting name, number or patch customization.
+
+## Shopping Help
+- [Size Guide](https://www.gojersey.co/faq/detail/Size-Specification/813): Size tables and fit guidance.
+- [Shipping Information](https://www.gojersey.co/shipping): Shipping methods, costs and estimated delivery times.
+- [Returns and Exchanges](https://www.gojersey.co/faq/detail/Returns-Exchange-Policy/5942): Return eligibility and process.
+- [Contact Us](https://www.gojersey.co/faq/detail/Contact-Us/815): Customer support channels.
+
+## About and Policies
+- [About Gojersey](https://www.gojersey.co/faq/detail/About-Us/802): Brand and service information.
+- [Privacy Policy](https://www.gojersey.co/faq/detail/Privacy-Policy/826): Privacy practices.
+- [Gojersey Blog](https://www.gojersey.co/blog): Shopping guides and football apparel content.
+
+## Optional
+- [Product Sitemap](https://www.gojersey.co/sitemap/product.xml): Product discovery index.
+- [Team Sitemap](https://www.gojersey.co/sitemap/team.xml): Team page discovery index.
+- [Category Sitemap](https://www.gojersey.co/sitemap/category.xml): Category discovery index.</code></pre>
+        <p class="note">URL语义化改造完成后，必须同步把llms.txt中的旧ID或无语义地址更新为新的Canonical地址。建议同时在部署仓库中保存模板和自动生成脚本，避免人工维护造成链接过期。</p>
+
+        <h3>6.9 各页面GEO适配要求</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>页面类型</th><th>需要新增或调整的内容</th><th>研发与内容要求</th></tr></thead>
+          <tbody>
+            <tr><td>首页</td><td>50—100字站点摘要、主营品类、定制能力、配送范围、退换货与核心分类入口</td><td>摘要在首屏HTML中输出；Organization与WebSite数据保持一致</td></tr>
+            <tr><td>球队页</td><td>页面包含哪些球衣、赛季、成人/儿童/女装、复古、可定制范围及常见问题</td><td>禁止只放商品瀑布流；摘要、事实表和FAQ服务端输出</td></tr>
+            <tr><td>分类页</td><td>分类定义、适用人群、版本差异、尺码建议、价格范围、定制及配送说明</td><td>商品列表下方增加可折叠说明，同时保留HTML文本供抓取</td></tr>
+            <tr><td>商品页</td><td>球队、赛季、主客场、版本、材质、适用人群、尺码、定制费用、库存、价格、配送、退货资格</td><td>增加“Product facts”事实区；页面文本、购物车金额和Product Schema完全一致</td></tr>
+            <tr><td>尺码指南</td><td>按成人、儿童、女装和球员版分别给出cm/inch表格及测量方法</td><td>表格必须是HTML文本，图片仅作辅助；说明版型差异和选择示例</td></tr>
+            <tr><td>物流页面</td><td>处理时间、配送方式、费用、国家差异、日期范围、税费和延误处理</td><td>显示“最后更新日期”；避免“最快7天”和实际15—25天规则互相冲突</td></tr>
+            <tr><td>退换货页面</td><td>可退条件、不可退条件、定制商品规则、时限、费用、申请步骤与退款时间</td><td>先给结论，再给例外；与商品页和结账提示保持一致</td></tr>
+            <tr><td>About/Contact</td><td>品牌主体、服务范围、联系域名、客服渠道、公司信息和内容责任主体</td><td>统一gojersey.co品牌实体；减少邮箱域名和主域不一致带来的信任冲突</td></tr>
+            <tr><td>博客/指南</td><td>尺码选择、球迷版与球员版区别、定制流程、清洗方法、配送和购买决策指南</td><td>采用问题式标题、直接答案、步骤、比较表、作者/审核人和更新时间</td></tr>
+          </tbody>
+        </table></div>
+
+        <h3>6.10 页面“可引用内容块”组件</h3>
+        <p>研发应提供统一的GEO内容组件，供首页、分类、球队和商品模板调用，避免运营人员在不同页面自由排版导致结构不一致。</p>
+        <pre><code>&lt;section class="answer-summary"&gt;
+  &lt;h2&gt;About this collection&lt;/h2&gt;
+  &lt;p&gt;40—80词直接摘要：这里销售什么、适合谁、有哪些版本和服务。&lt;/p&gt;
+&lt;/section&gt;
+
+&lt;section class="fact-table"&gt;
+  商品类型｜球队/国家｜赛季｜版本｜尺码｜定制｜配送｜退货资格
+&lt;/section&gt;
+
+&lt;section class="faq"&gt;
+  3—6个真实高频问题，每个答案先给结论，再补充条件和链接
+&lt;/section&gt;
+
+&lt;p class="content-meta"&gt;Last reviewed: YYYY-MM-DD&lt;/p&gt;</code></pre>
+        <ul>
+          <li>直接摘要避免口号堆叠，必须包含页面实体和关键限定条件。</li>
+          <li>事实表字段由商品或CMS数据生成，不能由编辑手工重复填写价格和库存。</li>
+          <li>FAQ来自站内搜索、客服和售后真实问题，不批量复制到所有页面。</li>
+          <li>每个回答可以独立被引用，同时保留指向尺码、物流、退换货和相关分类的内部链接。</li>
+          <li>更新日期必须对应真实审核行为，禁止每次请求自动刷新日期。</li>
+        </ul>
+
+        <h3>6.11 品牌实体、可信度与事实一致性</h3>
+        <ul>
+          <li>统一品牌名称、主域名、客服邮箱、社交账号和公司主体信息，并在Organization Schema中保持一致。</li>
+          <li>About Us补充可核实的主体、服务地区、联系方式和内容责任说明，避免只保留泛化品牌故事。</li>
+          <li>政策页设置负责人、最后审核日期和变更记录；重要配送和退换货变化同步更新所有语言页面。</li>
+          <li>用户评价必须绑定真实订单或明确评价来源，禁止不同商品复用相同评价数量与内容。</li>
+          <li>价格、库存、定制费、配送时效和退货规则建立单一数据源，同时供页面、Schema、购物车、结账及llms.txt关联内容调用。</li>
+        </ul>
+
+        <h3>6.12 AI抓取、索引与内容控制</h3>
+        <ul>
+          <li>确认CDN、防火墙和robots.txt没有误拦截正常搜索抓取；公开商品、分类和政策页必须可访问。</li>
+          <li>账户、购物车、结账、订单、搜索结果参数页和客户数据页面使用合适的登录控制及noindex策略，不得写入llms.txt或Sitemap。</li>
+          <li>搜索收录控制与模型训练控制分开管理；任何爬虫策略调整都需经过法务、SEO/GEO和技术共同确认。</li>
+          <li>需要限制摘要展示时使用标准的noindex、nosnippet、max-snippet或data-nosnippet机制，不依赖llms.txt作为访问控制文件。</li>
+          <li>每次发布后检查HTTP状态、渲染HTML、Canonical、结构化数据、robots规则和CDN访问日志。</li>
+        </ul>
+
+        <h3>6.13 GEO监测与验收</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>指标</th><th>监测方法</th><th>目标</th></tr></thead>
+          <tbody>
+            <tr><td>llms.txt可用性</td><td>定时请求状态码、Content-Type、编码和全部链接</td><td>200；无失效Canonical链接</td></tr>
+            <tr><td>核心页面GEO覆盖</td><td>抽检首页、Top球队、Top分类和高销量商品</td><td>摘要、事实表、FAQ或政策说明覆盖率≥90%</td></tr>
+            <tr><td>事实一致性</td><td>比较页面文本、Schema、购物车、结账和后台数据</td><td>价格、库存、费用与政策重大冲突为0</td></tr>
+            <tr><td>AI引用情况</td><td>Bing Webmaster Tools AI Performance、分析工具中的AI引荐流量和固定问题集测试</td><td>建立上线前基线，按月提升有效引用页面数</td></tr>
+            <tr><td>引用后转化</td><td>AI引荐会话的商品浏览、加购、结账和收入</td><td>单独监测，不以引用次数替代业务结果</td></tr>
+            <tr><td>内容时效</td><td>政策、尺码、物流和核心品类月度复核</td><td>过期关键信息为0</td></tr>
+          </tbody>
+        </table></div>
+        <div class="callout green"><strong>GEO完成标准：</strong>不是网站出现一个llms.txt文件，而是核心页面的实体、事实、答案、结构化数据和政策信息能够被稳定抓取、独立理解、交叉核实，并且与真实购买流程保持一致。</div>
+      </section>
+
+      <section id="checkout">
+        <h2>七、下单流程优化</h2>
+        <p class="lead">保留现有访客结账和加购确认优势，参考成熟Shopify主题，将商品选择、费用确认、购物车和单页结账整合成一条更短、更透明、异常可恢复的购买链路。</p>
+
+        <h3>7.1 将原三步结算流程缩短为两步</h3>
+        <p>原系统将用户拆分到“购物车—地址与物流选择—支付”三个独立步骤。每增加一次页面跳转和确认，都可能造成移动端加载等待、信息重复填写、返回修改困难以及中途退出。参考Shopify的结账体验，建议将地址、配送方式和支付方式整合进同一个结账页面，把用户可感知的下单流程缩短为两步。</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>流程</th><th>页面步骤</th><th>主要问题或改进</th></tr></thead>
+          <tbody>
+            <tr><td>原系统</td><td>购物车 → 地址/物流选择 → 支付</td><td>三个独立页面，页面跳转多；地址和物流页容易形成额外流失点；移动端返回修改商品或地址成本较高。</td></tr>
+            <tr><td>优化后</td><td>购物车 → 结账</td><td>在同一结账页完成联系信息、地址、配送方式和支付；减少一步跳转，缩短下单时间并提升结账完成率。</td></tr>
+          </tbody>
+        </table></div>
+        <pre><code>原流程：购物车 → 地址与物流选择 → 支付
+
+目标流程：购物车 → 结账
+                    ├─ 联系信息
+                    ├─ 收货地址
+                    ├─ 配送方式
+                    └─ 支付方式</code></pre>
+        <h4>研发实施要求</h4>
+        <ul>
+          <li>购物车点击“Checkout”后直接进入统一结账页，不再设置独立的地址物流中间页面。</li>
+          <li>结账页按Contact、Delivery、Payment三个区域组织，但用户仍停留在同一页面完成操作。</li>
+          <li>填写国家、州省、邮编后，配送方式和费用在当前页面即时刷新，不整页跳转。</li>
+          <li>用户修改地址时只重新计算物流和税费，不清空商品、优惠码、定制信息和支付选择。</li>
+          <li>移动端采用折叠分区或连续表单，底部持续展示订单总价和主操作按钮。</li>
+          <li>快捷支付可从购物车或结账页直接发起，但必须保留地址校验、金额校验和订单幂等。</li>
+          <li>对“购物车进入结账率、结账页退出率、完成支付耗时、结账完成率”分别建立优化前后对比。</li>
+        </ul>
+        <div class="callout blue"><strong>核心目标：</strong>减少一个用户可感知的页面步骤，而不是简单隐藏页面。地址、物流、税费、优惠和支付仍需完整校验，只是集中在同一结账界面内完成。</div>
+
+        <h3>7.2 推荐购买链路</h3>
+        <pre><code>商品详情页
+→ 选择版本、尺码、定制内容
+→ 实时显示总价与送达日期
+→ 加入购物车
+→ 购物车抽屉
+→ 购物车页或直接结账
+→ 统一结账页（地址 + 物流 + 支付）
+→ 订单成功页</code></pre>
+
+        <h3>7.3 商品详情页</h3>
+        <ol>
+          <li>图片、标题、真实评分和评价数。</li>
+          <li>单件价格为主，阶梯价为辅。</li>
+          <li>版本选择和球迷版/球员版差异说明。</li>
+          <li>尺码选择、尺码表和缺货提示。</li>
+          <li>姓名、号码、Patch定制。</li>
+          <li>实时显示商品价、每项定制费和当前合计。</li>
+          <li>显示定制商品退换货限制并要求用户核对拼写。</li>
+          <li>根据国家和物流方式计算预计到达日期区间。</li>
+          <li>加入购物车按钮及移动端悬浮操作栏。</li>
+        </ol>
+        <div class="callout"><strong>定制金额必须以后端计算为准。</strong>前端仅负责交互展示；后端重新校验商品、尺码、定制选项、折扣和最终金额，防止前端篡改。</div>
+
+        <h3>7.4 购物车抽屉</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>模块</th><th>必须展示</th></tr></thead>
+          <tbody>
+            <tr><td>商品信息</td><td>图片、名称、尺码、定制姓名和号码、定制费用、数量。</td></tr>
+            <tr><td>费用</td><td>当前小计、折扣、包邮进度和预计运费说明。</td></tr>
+            <tr><td>物流</td><td>根据当前日期显示预计送达区间。</td></tr>
+            <tr><td>操作</td><td>修改、删除、查看购物车、立即结账。</td></tr>
+          </tbody>
+        </table></div>
+
+        <h3>7.5 购物车页面</h3>
+        <ul>
+          <li>提前说明运费和税费，不允许到支付前最后一步才出现额外费用。</li>
+          <li>包含定制商品时，显示不可无理由退货提示。</li>
+          <li>推荐模块只展示同球队、同赛季、相关品类或后台手动绑定商品。</li>
+          <li>排除贺卡、礼品卡、当前已购、缺货和国家不匹配商品。</li>
+          <li>移动端结账按钮保持清晰可见，但不得遮挡优惠和错误提示。</li>
+        </ul>
+
+        <h3>7.6 统一结账页</h3>
+        <pre><code>1. Contact
+2. Delivery
+3. Payment</code></pre>
+        <ul>
+          <li>允许访客结账，不强制注册。</li>
+          <li>快捷支付放在顶部，普通表单保持清晰。</li>
+          <li>国家变化后自动调整省州、电话和邮编规则。</li>
+          <li>表单错误行内提示并自动聚焦，刷新或支付失败后保留内容。</li>
+          <li>桌面端订单摘要持续可见；移动端提供清晰的展开入口。</li>
+          <li>优惠码默认折叠，结账页不展示无关推荐和营销弹窗。</li>
+        </ul>
+
+        <h3>7.7 支付与订单状态机</h3>
+        <pre><code>cart → checkout_created → payment_pending → payment_processing
+→ paid / payment_failed / cancelled / refunded / partially_refunded</code></pre>
+        <ul>
+          <li>支付接口使用幂等Key，防止双击和重复回调生成重复订单。</li>
+          <li>订单金额在服务端重新校验。</li>
+          <li>支付成功以支付网关回调为准，不能只依赖前端成功页跳转。</li>
+          <li>支付失败后保留购物车和地址，允许切换支付方式再次尝试。</li>
+          <li>支付回调失败建立自动补偿任务和人工处理队列。</li>
+        </ul>
+      </section>
+
+      <section id="experience">
+        <h2>八、网站体验优化</h2>
+        <h3>8.1 首页</h3>
+        <pre><code>促销通栏
+主导航
+Hero Banner：产品定位 + Shop Now + Customize Your Jersey
+信任条：Free Shipping / Customization / Secure Payment / Returns
+热门俱乐部与国家队
+主推商品
+定制服务说明
+真实评价
+FAQ与页脚</code></pre>
+        <ul>
+          <li>统一顶部和底部优惠，不再同时展示不同优惠力度。</li>
+          <li>将定制服务和365天退换货提升至首屏。</li>
+          <li>合并重复的俱乐部和国家队模块，缩短首页长度。</li>
+          <li>底部促销栏允许明显关闭，关闭后当前会话不再出现。</li>
+        </ul>
+
+        <h3>8.2 导航与搜索</h3>
+        <ul>
+          <li>建立Mega Menu，让用户直接预览主要联赛、俱乐部、国家队、男装、女装、童装、复古和定制入口。</li>
+          <li>Women与Kids拆分，不能继续共用一个指向New Arrivals的入口。</li>
+          <li>搜索使用全文和模糊匹配，并按球队、商品标题、别名、联赛和销量排序。</li>
+          <li>搜索零结果时展示纠错词、热门球队和相关分类，而不是空白页。</li>
+        </ul>
+
+        <h3>8.3 商品列表页</h3>
+        <ul>
+          <li>卡片展示单件明确价格，阶梯价格作为辅助信息。</li>
+          <li>增加促销、新品、可定制、包邮标签，最多同时展示1—2个。</li>
+          <li>Quick View支持选尺码和快速加购。</li>
+          <li>筛选项显示已选状态、结果数量和一键清除。</li>
+          <li>筛选后URL可分享，返回页面时恢复筛选和滚动位置。</li>
+        </ul>
+
+        <h3>8.4 移动端组件标准</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>组件</th><th>规范</th></tr></thead>
+          <tbody>
+            <tr><td>可点击区域</td><td>不小于44×44px。</td></tr>
+            <tr><td>输入框</td><td>高度建议不低于44px，标签常驻可见。</td></tr>
+            <tr><td>固定栏</td><td>不得遮挡错误提示、政策链接和页面主要内容。</td></tr>
+            <tr><td>关闭按钮</td><td>位置明确、图标清晰、点击范围达标。</td></tr>
+            <tr><td>键盘交互</td><td>输入定制内容时不遮挡输入框和提交按钮。</td></tr>
+          </tbody>
+        </table></div>
+
+        <h3>8.5 信任与合规体验</h3>
+        <ul>
+          <li>联系邮箱建议使用与主域一致的企业邮箱。</li>
+          <li>About Us补充真实公司主体、服务地区和联系方式。</li>
+          <li>评价必须与具体商品绑定，禁止不同商品复制相同数量和内容。</li>
+          <li>清理“Authentic”等可能造成误解的用词，统一版本说明。</li>
+          <li>促销倒计时必须对应真实活动时间，避免循环重置。</li>
+        </ul>
+      </section>
+
+      <section id="data">
+        <h2>九、数据监控与实验</h2>
+        <h3>9.1 必须埋点的核心事件</h3>
+        <div class="pill-row">
+          <span class="pill">view_item</span><span class="pill">select_size</span><span class="pill">select_customization</span><span class="pill">add_to_cart</span><span class="pill">view_cart</span><span class="pill">begin_checkout</span><span class="pill">add_shipping_info</span><span class="pill">add_payment_info</span><span class="pill">purchase</span><span class="pill">payment_failed</span>
+        </div>
+        <p>所有事件应包含商品ID、球队、分类、版本、尺码、定制状态、国家、语言、货币、设备、流量来源和实验版本。</p>
+
+        <h3>9.2 监控看板</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>看板</th><th>核心内容</th><th>频率</th></tr></thead>
+          <tbody>
+            <tr><td>性能看板</td><td>TTFB、LCP、INP、CLS、JS错误、API失败，按页面和国家拆分。</td><td>每日</td></tr>
+            <tr><td>转化漏斗</td><td>商品浏览→加购→购物车→结账→支付成功。</td><td>每日/周</td></tr>
+            <tr><td>支付异常</td><td>渠道失败率、错误码、重复订单、回调延迟。</td><td>实时</td></tr>
+            <tr><td>SEO/GEO健康</td><td>404、软404、Canonical冲突、Sitemap、结构化数据、llms.txt链接、AI引用页面与内容时效。</td><td>每周</td></tr>
+            <tr><td>GEO与AI引用</td><td>llms.txt健康、被引用页面、grounding queries、AI引荐会话和辅助收入。</td><td>每周/月</td></tr>
+            <tr><td>实验看板</td><td>实验曝光、转化、收入、样本量和置信度。</td><td>按实验</td></tr>
+          </tbody>
+        </table></div>
+
+        <h3>9.3 A/B测试顺序</h3>
+        <ol>
+          <li>定制价格实时总价 vs 仅显示单项附加费。</li>
+          <li>具体送达日期 vs “Fast Shipping”泛化文案。</li>
+          <li>购物车抽屉直接结账 vs 先查看购物车。</li>
+          <li>首页主CTA“Shop Now” vs “Customize Your Jersey”。</li>
+          <li>商品卡片明确单价 vs 价格区间。</li>
+        </ol>
+        <p class="note">P0缺陷修复不进行A/B测试，应直接修复。只有可逆且不存在正确性风险的体验方案才适合实验。</p>
+      </section>
+
+      <section id="qa">
+        <h2>十、测试与上线机制</h2>
+        <h3>10.1 自动化测试</h3>
+        <ul>
+          <li>球队ID与Slug映射测试。</li>
+          <li>无效ID返回404测试。</li>
+          <li>Canonical、hreflang、结构化数据、llms.txt格式与链接有效性测试。</li>
+          <li>商品定制金额和订单金额一致性测试。</li>
+          <li>重复点击支付和重复回调幂等测试。</li>
+          <li>库存变化、优惠叠加、货币切换和多语言测试。</li>
+          <li>移动端主流分辨率和浏览器回归测试。</li>
+        </ul>
+
+        <h3>10.2 上线前检查</h3>
+        <ol>
+          <li>数据库备份和迁移回滚脚本可用。</li>
+          <li>Google Ads和Meta Ads落地页完成批量验证。</li>
+          <li>301、404、Canonical、Sitemap和llms.txt完成抽样及自动扫描。</li>
+          <li>真实支付小额测试成功，订单、邮件和后台状态一致。</li>
+          <li>核心指标监控和告警已启用。</li>
+          <li>客服已获得新流程说明和异常处理手册。</li>
+        </ol>
+      </section>
+
+      <section id="ownership">
+        <h2>十一、团队分工</h2>
+        <div class="ownership">
+          <div class="owner"><b>产品负责人</b><span>确定优先级、流程规则、页面信息架构、验收标准和跨团队排期。</span></div>
+          <div class="owner"><b>前端研发</b><span>组件规范、移动端交互、页面性能、购物车抽屉、结账表单和埋点。</span></div>
+          <div class="owner"><b>后端研发</b><span>URL映射、缓存、数据库、定制金额、订单状态机、支付幂等和异常补偿。</span></div>
+          <div class="owner"><b>SEO/GEO负责人</b><span>URL迁移表、H标签、Schema、Canonical、Sitemap、hreflang、llms.txt、页面问答结构、实体一致性和AI引用监测。</span></div>
+          <div class="owner"><b>测试工程师</b><span>自动化回归、跨设备测试、订单支付测试、SEO状态码与数据一致性验证。</span></div>
+          <div class="owner"><b>设计负责人</b><span>移动端触控规范、商品页信息层级、购物车与结账页面视觉和信任组件。</span></div>
+          <div class="owner"><b>运营与广告</b><span>核对落地页、促销规则、推荐商品、活动倒计时和广告URL。</span></div>
+          <div class="owner"><b>数据分析</b><span>建立基线、漏斗看板、实验设计、指标监控和周度复盘。</span></div>
+        </div>
+      </section>
+
+      <section id="acceptance">
+        <h2>十二、验收指标</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>维度</th><th>验收指标</th><th>验收方式</th></tr></thead>
+          <tbody>
+            <tr><td>URL正确性</td><td>热门球队与广告URL映射准确率100%</td><td>自动扫描 + 人工抽检</td></tr>
+            <tr><td>软404</td><td>无效ID真实404；Sitemap不包含错误页</td><td>爬虫扫描</td></tr>
+            <tr><td>性能</td><td>缓存命中TTFB≤1秒；P75 LCP≤2.5秒、INP≤200ms、CLS≤0.1</td><td>真实用户监控</td></tr>
+            <tr><td>HTML</td><td>首页HTML≤500KB</td><td>构建与线上采样</td></tr>
+            <tr><td>移动端</td><td>核心操作触控区域≥44×44px</td><td>设计规范 + 自动/人工检查</td></tr>
+            <tr><td>定制</td><td>商品页、购物车、结账、订单金额一致</td><td>测试订单矩阵</td></tr>
+            <tr><td>支付</td><td>重复点击、重复回调不产生重复订单</td><td>幂等测试</td></tr>
+            <tr><td>SEO/GEO</td><td>Schema覆盖率≥95%；Canonical和hreflang无重大错误；llms.txt可访问且关键页面GEO组件覆盖率≥90%</td><td>自动校验 + 页面抽检</td></tr>
+            <tr><td>转化</td><td>加购率、购物车进入结账率、结账完成率达到项目目标</td><td>优化前后对比</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <section id="top20">
+        <h2>十三、Top 20优先任务清单</h2>
+        <ol class="checklist">
+          <li><strong>修复热门球队URL与内容映射错误。</strong></li>
+          <li><strong>为Slug与ID建立强校验及标准301逻辑。</strong></li>
+          <li><strong>无效球队、分类和商品ID返回真实404或410。</strong></li>
+          <li><strong>批量检查所有广告落地页状态码与页面主题。</strong></li>
+          <li><strong>统一定制选项、费用和后端金额计算模型。</strong></li>
+          <li><strong>商品页实时展示定制后总价及退换货规则。</strong></li>
+          <li><strong>修复购物车无关商品推荐。</strong></li>
+          <li><strong>全站移动端核心触控区域升级至44×44px。</strong></li>
+          <li><strong>购物车提前展示运费、税费和送达日期。</strong></li>
+          <li><strong>建立支付幂等、防重复订单和回调补偿机制。</strong></li>
+          <li><strong>建立订单状态机和支付失败恢复流程。</strong></li>
+          <li><strong>为首页、分类、球队和商品页补齐H1/H2。</strong></li>
+          <li><strong>上线Product、Offer、Breadcrumb结构化数据和<code>/llms.txt</code>，并为核心页面增加可引用摘要、事实表与FAQ。</strong></li>
+          <li><strong>清理Sitemap中的301、404、noindex和错误Canonical页面。</strong></li>
+          <li><strong>为tag数字分类建立语义化URL与301迁移表。</strong></li>
+          <li><strong>建立首页、球队、分类与商品主体缓存。</strong></li>
+          <li><strong>将首页HTML体积压缩至500KB以内。</strong></li>
+          <li><strong>优化JS、CSS、图片和无限滚动请求。</strong></li>
+          <li><strong>建立Core Web Vitals、API和支付异常看板。</strong></li>
+          <li><strong>建立自动化回归、灰度发布和24小时上线监控机制。</strong></li>
+        </ol>
+
+        <h3 id="deliverables">项目交付物</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>交付物</th><th>内容</th><th>责任团队</th></tr></thead>
+          <tbody>
+            <tr><td>URL与重定向清单</td><td>旧URL、新URL、状态码、Canonical、广告使用情况。</td><td>SEO + 后端</td></tr>
+            <tr><td>组件与交互规范</td><td>按钮、输入框、弹窗、购物车、移动端固定栏。</td><td>设计 + 前端</td></tr>
+            <tr><td>订单与支付技术方案</td><td>状态机、幂等、回调、补偿、异常日志。</td><td>后端</td></tr>
+            <tr><td>性能优化报告</td><td>优化前后指标、瓶颈、资源体积和真实用户数据。</td><td>前端 + 后端 + 数据</td></tr>
+            <tr><td>SEO/GEO验收报告</td><td>抓取、状态码、Schema、Sitemap、Canonical、hreflang、llms.txt、页面可引用性和AI引用基线。</td><td>SEO/GEO + 测试</td></tr>
+            <tr><td>GEO内容与llms.txt清单</td><td>核心页面摘要、事实表、FAQ、实体信息、llms.txt模板、生成规则和更新责任。</td><td>SEO/GEO + 内容 + 研发</td></tr>
+            <tr><td>转化漏斗报告</td><td>优化前后加购、购物车、结账和支付完成数据。</td><td>数据 + 产品</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="callout green"><strong>最终完成标准：</strong>核心页面正确、订单金额可信、支付异常可恢复、移动端可顺畅操作、搜索引擎与生成式搜索系统可准确理解核心内容、性能和转化指标均有上线前后数据证明。</div>
+      </section>
+
+      <div class="footer">Gojersey.co 网站优化实施计划 · 研发执行版 · 基于2026年7月4日诊断结果整理</div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const sidebar=document.getElementById('sidebar');
+  const mobile=document.getElementById('mobileToc');
+  mobile.addEventListener('click',()=>{
+    sidebar.classList.toggle('open');
+    mobile.classList.toggle('open');
+  });
+
+  const links=[...document.querySelectorAll('#toc a')];
+  const sections=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const observer=new IntersectionObserver(entries=>{
+    const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top)[0];
+    if(!visible)return;
+    links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+visible.target.id));
+  },{rootMargin:'-15% 0px -72% 0px',threshold:[0,1]});
+  sections.forEach(s=>observer.observe(s));
+
+  links.forEach(a=>a.addEventListener('click',()=>{
+    if(window.innerWidth<=1100){sidebar.classList.remove('open');mobile.classList.remove('open');}
+  }));
+</script>
+</body>
+</html>
